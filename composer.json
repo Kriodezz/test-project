@@ -1,0 +1,11 @@
+{
+    "name": "tara/test-project",
+    "description": "n",
+    "type": "roject",
+    "autoload": {
+        "psr-4": {
+            "Tara\\TestProject\\": "src/"
+        }
+    },
+    "require": {}
+}
