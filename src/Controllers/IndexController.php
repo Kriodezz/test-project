@@ -6,6 +6,8 @@ class IndexController extends AbstractController
 {
     public function index()
     {
-        $this->view->renderHtml('list-materials.php');
+        $this->view->renderHtml(
+            'list-materials.php', ['title' => 'Материалы']
+        );
     }
 }
