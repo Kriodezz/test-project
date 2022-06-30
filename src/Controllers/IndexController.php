@@ -2,10 +2,10 @@
 
 namespace Tara\TestProject\Controllers;
 
-class IndexController
+class IndexController extends AbstractController
 {
     public function index()
     {
-        echo 'yes';
+        $this->view->renderHtml('list-materials.php');
     }
 }
