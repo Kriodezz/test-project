@@ -12,4 +12,22 @@ abstract class AbstractController
     {
         $this->view = new View(__DIR__ . '/../../Public/templates');
     }
+
+    public static function addDataForMaterials($materials, $data, $nameProperty)
+    {
+        foreach ($materials as $keyMaterial => $valueMaterial) {
+            foreach ($data as $keyData => $item) {
+                if ($keyMaterial === $keyData) {
+                    if (empty($item)) {
+                        $materials[$keyMaterial][$nameProperty] = null;
+                    } else {
+                        foreach ($item as $valueItem) {
+                            $materials[$keyMaterial][$nameProperty][] = $valueItem[$nameProperty];
+                        }
+                    }
+                }
+            }
+        }
+        return $materials;
+    }
 }
