@@ -15,7 +15,8 @@
 
 <div class="content">
   <div class="container">
-    <h1>Такой страницы нет :( </h1>
+    <h1><?php echo $error; ?></h1>
+      <p><?php echo $description ?? ''; ?></p>
   </div>
 </div>
 

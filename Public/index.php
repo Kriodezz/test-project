@@ -17,7 +17,14 @@ foreach ($routes as $pattern => $controllerAndAction) {
 
 if (!$isRouteFound) {
     $view = new \Tara\TestProject\View\View(__DIR__ . '/templates/errors');
-    $view->renderHtml('404.html', [], 404);
+    $view->renderHtml(
+        '404.php',
+        [
+            'error' => 'Данная страница не существует!',
+            'description' => 'Вы ввели неправильный адрес. Проверьте правильность ввода'
+        ],
+        404);
+    exit();
 }
 
 $controllerName = $controllerAndAction[0];
