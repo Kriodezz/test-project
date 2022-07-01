@@ -12,4 +12,5 @@ return [
     '~^material/create$~' => [MaterialController::class, 'create'],
     '~^tags/show$~' => [TagController::class, 'show'],
     '~^categories/show$~' => [CategoryController::class, 'show'],
+    '~^material/find~' => [MaterialController::class, 'find'],
 ];
