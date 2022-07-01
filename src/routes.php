@@ -9,8 +9,9 @@ use Tara\TestProject\Controllers\{
 
 return [
     '~^$~' => [IndexController::class, 'index'],
+    '~^material/find~' => [MaterialController::class, 'find'],
+    '~^material/show/(\d+)$~' => [MaterialController::class, 'show'],
     '~^material/create$~' => [MaterialController::class, 'create'],
     '~^tags/show$~' => [TagController::class, 'show'],
     '~^categories/show$~' => [CategoryController::class, 'show'],
-    '~^material/find~' => [MaterialController::class, 'find'],
 ];
