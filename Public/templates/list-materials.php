@@ -2,7 +2,7 @@
 
         <div class="container">
             <h1 class="my-md-5 my-4">Материалы</h1>
-            <a class="btn btn-primary mb-4" href="#" role="button">Добавить</a>
+            <a class="btn btn-primary mb-4" href="<?php echo 'material/create'; ?>" role="button">Добавить</a>
             <div class="row">
                 <div class="col-md-8">
                     <form>

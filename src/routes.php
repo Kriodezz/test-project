@@ -2,14 +2,14 @@
 
 use Tara\TestProject\Controllers\{
     IndexController,
-    ArticleController,
+    MaterialController,
     TagController,
     CategoryController
 };
 
 return [
     '~^$~' => [IndexController::class, 'index'],
-    '~^articles/create$~' => [ArticleController::class, 'create'],
+    '~^material/create$~' => [MaterialController::class, 'create'],
     '~^tags/show$~' => [TagController::class, 'show'],
     '~^categories/show$~' => [CategoryController::class, 'show'],
 ];
