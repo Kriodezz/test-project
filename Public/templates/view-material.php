@@ -54,13 +54,13 @@
                         <h3>Теги</h3>
                         <div class="input-group mb-3">
                             <select class="form-select" name="tag" id="selectAddTag" aria-label="Добавьте теги">
-                                <?php foreach ($tags as $key => $tag): ?>
+                                <?php foreach ($tags as $tag): ?>
                                 <option
-                                    <?php if ($key === 0) {
+                                    <?php if ($tag->getTitle() === 0) {
                                         echo 'selected';
                                     } ?>
-                                     value="<?php echo $tag['id']; ?>">
-                                    <?php echo $tag['title']; ?>
+                                     value="<?php echo $tag->getId(); ?>">
+                                    <?php echo $tag->getTitle(); ?>
                                 </option>
                                 <?php endforeach; ?>
                             </select>

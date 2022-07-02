@@ -2,6 +2,7 @@
 
 namespace Tara\TestProject\Controllers;
 
+use Tara\TestProject\Models\Category;
 use Tara\TestProject\Models\MaterialForDisplay;
 use Tara\TestProject\Models\Tag;
 
@@ -46,7 +47,7 @@ class MaterialController extends AbstractController
             $dataMaterial[0]['description']
         );
 
-        $tags = Tag::findAll();
+        $tags = Tag::findAllInObject();
 
         $this->view->renderHtml(
             'view-material.php',
@@ -56,7 +57,14 @@ class MaterialController extends AbstractController
 
     public function create()
     {
+        if (!empty($_POST)) {
+            var_dump($_POST);
+        }
+
+        $allCategory = Category::findAllInObject();
+
         $this->view->renderHtml(
-            'create-material.php', ['title' => 'Материалы']);
+            'create-material.php',
+            ['title' => 'Материалы', 'categories' => $allCategory]);
     }
 }
