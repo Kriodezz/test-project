@@ -142,7 +142,12 @@ echo '111';
 
     public function delete(): void
     {
-
+        $db = Db::getInstance();
+        $db->execute(
+            'DELETE FROM ' . static::TABLE_NAME . ' WHERE id = :id',
+            [':id' => $this->id]
+        );
+        $this->id = null;
     }
 
     public static function addPropertyToMaterial(int $idProperty, int $idMaterial): void

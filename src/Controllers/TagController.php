@@ -2,6 +2,7 @@
 
 namespace Tara\TestProject\Controllers;
 
+use Tara\TestProject\Exception\InvalidArgumentException;
 use Tara\TestProject\Models\Material;
 use Tara\TestProject\Models\MaterialWithAllData;
 use Tara\TestProject\Models\Tag;
@@ -84,7 +85,44 @@ class TagController extends AbstractController
         );
     }
 
-    public function delete($tagName, $materialId)
+    public function create()
+    {
+
+
+        $this->view->renderHtml(
+            'create-tag.php',
+            [
+                'title' => 'Теги',
+                'action' => '/tags/create',
+                'act' => 'Добавить',
+                'button' => 'Добавить',
+                'exceptions' => $dataExceptions ?? null
+            ]
+        );
+    }
+
+    public function edit($idTag)
+    {
+        $this->view->renderHtml(
+            'create-tag.php',
+            [
+                'title' => 'Теги',
+                'action' => '/tags/edit/' . $idTag,
+                'act' => 'Редактировать',
+                'button' => 'Изменить',
+                'exceptions' => $dataExceptions ?? null
+            ]
+        );
+    }
+
+    public function delete($idTag)
+    {
+        $tag = Tag::findByIdInObject($idTag);
+        $tag->delete();
+        header('Location: /tags/show');
+    }
+
+    public function deleteFromMaterial($tagName, $materialId)
     {
         $tag = Tag::findByColumnStrict('title',$tagName)[0];
         $tag->deleteTagFromMaterial($materialId);
