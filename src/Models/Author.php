@@ -6,14 +6,15 @@ class Author extends AbstractModel
 {
     const TABLE_NAME = 'author';
 
-    protected string $name;
+    protected string $title;
 
     /**
      * @return string
      */
     public function getName(): string
+
     {
-        return $this->name;
+        return $this->title;
     }
 
     /**
@@ -21,6 +22,6 @@ class Author extends AbstractModel
      */
     public function setName(string $name): void
     {
-        $this->name = $name;
+        $this->title = $name;
     }
 }

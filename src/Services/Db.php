@@ -49,9 +49,14 @@ class Db
         return $sth->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public function execute(string $sql, array $params = [])
+    public function execute(string $sql, array $params = []): bool
     {
         $sth = $this->dbh->prepare($sql);
         return $sth->execute($params);
+    }
+
+    public function getLastInsertId(): int
+    {
+        return (int) $this->dbh->lastInsertId();
     }
 }

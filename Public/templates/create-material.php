@@ -16,6 +16,9 @@
                         <option value="Ключевые идеи книги">Ключевые идеи книги</option>
                     </select>
                     <label for="floatingSelectType">Тип</label>
+                    <?php if (isset($exceptions['type'])) { ?>
+                        <p class="text-danger">Пожалуйста, выберите тип</p>
+                    <?php } ?>
                     <div class="invalid-feedback">
                         Пожалуйста, выберите значение
                     </div>
@@ -32,6 +35,9 @@
                         <?php endforeach; ?>
                     </select>
                     <label for="floatingSelectCategory">Категория</label>
+                    <?php if (isset($exceptions['category'])) { ?>
+                        <p class="text-danger">Пожалуйста, выберите категорию</p>
+                    <?php } ?>
                     <div class="invalid-feedback">
                         Пожалуйста, выберите значение
                     </div>
@@ -39,6 +45,9 @@
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" name="title" placeholder="Напишите название" id="floatingName">
                     <label for="floatingName">Название</label>
+                    <?php if (isset($exceptions['title'])) { ?>
+                        <p class="text-danger">Пожалуйста, введите название</p>
+                    <?php } ?>
                     <div class="invalid-feedback">
                         Пожалуйста, заполните поле
                     </div>
@@ -46,6 +55,12 @@
                 <div class="form-floating mb-3">
                     <input type="text" class="form-control" name="authors" placeholder="Напишите авторов" id="floatingAuthor">
                     <label for="floatingAuthor">Авторы</label>
+                    <?php if (isset($exceptions['authors'])) {
+                        foreach ($exceptions['authors'] as $e): ?>
+                        <p class="text-danger">
+                            <?php echo $e; ?>
+                        </p>
+                    <?php endforeach; } ?>
                     <div class="invalid-feedback">
                         Пожалуйста, заполните поле
                     </div>

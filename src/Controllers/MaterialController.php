@@ -2,8 +2,10 @@
 
 namespace Tara\TestProject\Controllers;
 
+use Tara\TestProject\Exception\InvalidArgumentException;
 use Tara\TestProject\Models\Category;
-use Tara\TestProject\Models\MaterialForDisplay;
+use Tara\TestProject\Models\Material;
+use Tara\TestProject\Models\MaterialWithAllData;
 use Tara\TestProject\Models\Tag;
 
 class MaterialController extends AbstractController
@@ -24,7 +26,7 @@ class MaterialController extends AbstractController
 
     public function show($id)
     {
-        $dataMaterial = MaterialForDisplay::findOneMaterial($id);
+        $dataMaterial = MaterialWithAllData::findOneMaterial($id);
 
         if ($dataMaterial === null) {
             $this->view->renderHtml(
@@ -37,7 +39,7 @@ class MaterialController extends AbstractController
             exit();
         }
 
-        $material = new MaterialForDisplay(
+        $material = new MaterialWithAllData(
             (int) $dataMaterial[0]['id'],
             $dataMaterial[0]['title'],
             $dataMaterial[0]['type'],
@@ -58,13 +60,25 @@ class MaterialController extends AbstractController
     public function create()
     {
         if (!empty($_POST)) {
-            var_dump($_POST);
+            try {
+
+               $materialId = MaterialWithAllData::createNewMaterial($_POST);
+               header('Location: /material/show/' . $materialId);
+               exit();
+
+            } catch (InvalidArgumentException $exception) {
+                $dataExceptions = $exception->getAllException();
+            }
         }
 
         $allCategory = Category::findAllInObject();
-
         $this->view->renderHtml(
             'create-material.php',
-            ['title' => 'Материалы', 'categories' => $allCategory]);
+            [
+                'title' => 'Материалы',
+                'categories' => $allCategory,
+                'exceptions' => $dataExceptions ?? null
+            ]
+        );
     }
 }

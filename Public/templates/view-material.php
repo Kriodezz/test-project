@@ -68,7 +68,8 @@
                         </div>
                     </form>
                     <ul class="list-group mb-4">
-                        <?php foreach ($material->getTags() as $tag): ?>
+                        <?php if ($material->getTags() !== null) {
+                            foreach ($material->getTags() as $tag): ?>
                         <li class="list-group-item list-group-item-action d-flex justify-content-between">
                             <a href="#" class="me-3">
                                 <?php echo $tag;?>
@@ -82,7 +83,8 @@
                                 </svg>
                             </a>
                         </li>
-                        <?php endforeach; ?>
+                            <?php endforeach;
+                        } ?>
                     </ul>
                 </div>
                 <div class="col-md-6">

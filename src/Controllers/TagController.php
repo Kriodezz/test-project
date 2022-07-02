@@ -20,7 +20,8 @@ class TagController extends AbstractController
     public function addTo($materialId)
     {
         $material = Material::findById($materialId);
-        if (empty($material)) {
+
+        if ($material === null) {
             $this->view->renderHtml(
                 'errors/error.php',
                 ['error' => 'Данная статья не найдена или удалена'],
@@ -39,15 +40,19 @@ class TagController extends AbstractController
             exit();
         }
 
-        if (empty($tag)) {
+        if ($tag === null) {
             $this->view->renderHtml(
                 'errors/error.php',
                 ['error' => 'Данный тег не найден или удалён'],
                 404);
             exit();
         } else {
-            Tag::addPropertyToMaterial((int) $idTag, (int) $materialId);
-            header('Location: /material/show/' . $materialId);
+            try {
+                Tag::addPropertyToMaterial((int) $idTag, (int) $materialId);
+                header('Location: /material/show/' . $materialId);
+            } catch (\PDOException $e) {
+                header('Location: /material/show/' . $materialId);
+            }
         }
     }
 }

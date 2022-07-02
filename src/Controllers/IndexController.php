@@ -2,17 +2,17 @@
 
 namespace Tara\TestProject\Controllers;
 
-use Tara\TestProject\Models\MaterialForDisplay;
+use Tara\TestProject\Models\MaterialWithAllData;
 
 class IndexController extends AbstractController
 {
     public function index()
     {
-        $arrayData = MaterialForDisplay::findAllMaterial();
+        $arrayData = MaterialWithAllData::findAllMaterial();
 
         $arrayObject = [];
         foreach ($arrayData as $data) {
-            $arrayObject[] = new MaterialForDisplay(
+            $arrayObject[] = new MaterialWithAllData(
                 (int) $data['id'],
                 $data['title'],
                 $data['type'],
