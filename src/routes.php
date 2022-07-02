@@ -14,5 +14,6 @@ return [
     '~^material/create$~' => [MaterialController::class, 'create'],
     '~^tags/show$~' => [TagController::class, 'show'],
     '~^tags/add-to/(\d+)$~' => [TagController::class, 'addTo'],
+    '~^find/tag/(.+)$~' => [TagController::class, 'findByTag'],
     '~^categories/show$~' => [CategoryController::class, 'show'],
 ];

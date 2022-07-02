@@ -3,6 +3,7 @@
 namespace Tara\TestProject\Controllers;
 
 use Tara\TestProject\Models\Material;
+use Tara\TestProject\Models\MaterialWithAllData;
 use Tara\TestProject\Models\Tag;
 
 class TagController extends AbstractController
@@ -54,5 +55,32 @@ class TagController extends AbstractController
                 header('Location: /material/show/' . $materialId);
             }
         }
+    }
+
+    public function findByTag($tag)
+    {
+        $currentTag = Tag::findByColumnStrict('title', $tag);
+        if ($currentTag === null) {
+            $this->view->renderHtml(
+                'errors/error.php',
+                ['error' => 'Такого тега нет!'],
+                404);
+            exit();
+        }
+        $idMaterialsWithCurrentTag = Tag::getMaterialsByTag($currentTag[0]->getId());
+        if ($idMaterialsWithCurrentTag === null) {
+            $this->view->renderHtml(
+                'errors/error.php',
+                ['error' => 'По данному тегу ничего не найдено'],
+                404);
+            exit();
+        }
+        $materials = MaterialWithAllData::findSeveralMaterials($idMaterialsWithCurrentTag);
+        $arrayObject = self::returnResultsFind($materials);
+
+        $this->view->renderHtml(
+            'list-materials.php',
+            ['title' => 'Материалы', 'data' => $arrayObject]
+        );
     }
 }

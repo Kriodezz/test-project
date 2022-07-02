@@ -71,7 +71,7 @@
                         <?php if ($material->getTags() !== null) {
                             foreach ($material->getTags() as $tag): ?>
                         <li class="list-group-item list-group-item-action d-flex justify-content-between">
-                            <a href="#" class="me-3">
+                            <a href="/find/tag/<?php echo $tag; ?>" class="me-3">
                                 <?php echo $tag;?>
                             </a>
                             <a href="#" class="text-decoration-none">

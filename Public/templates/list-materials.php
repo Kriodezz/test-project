@@ -1,4 +1,4 @@
-<?php include __DIR__ . '/header.php';  ?>
+<?php include __DIR__ . '/header.php'; ?>
 
 <div class="container">
     <h1 class="my-md-5 my-4">Материалы</h1>
@@ -28,7 +28,8 @@
             </tr>
             </thead>
             <tbody>
-            <?php foreach ($data as $item): ?>
+            <?php if (!empty($data)) {
+                foreach ($data as $item): ?>
             <tr>
                 <td>
                     <a href="/material/show/<?php echo $item->getId(); ?>">
@@ -75,7 +76,8 @@
                     </a>
                 </td>
             </tr>
-            <?php endforeach; ?>
+                <?php endforeach;
+            } ?>
             </tbody>
         </table>
     </div>

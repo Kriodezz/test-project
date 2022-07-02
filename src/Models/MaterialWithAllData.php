@@ -87,9 +87,38 @@ class MaterialWithAllData extends AbstractModel
         return $this->description;
     }
 
-    public static function findAllMaterial(): array
+    public static function findAllMaterial(): ?array
     {
         $materials = Material::findAll();
+
+        if (empty($materials)) {
+            return null;
+        }
+
+        $idData = [];
+        foreach ($materials as $material) {
+            $idData[] = $material['id'];
+        }
+
+        $authors = Author::getDataForMaterials($idData);
+        $categories = Category::getDataForMaterials($idData);
+        $tags = Tag::getDataForMaterials($idData);
+
+        $materials = AbstractController::addDataForMaterials($materials, $authors, 'author');
+        $materials = AbstractController::addDataForMaterials($materials, $categories, 'category');
+        return AbstractController::addDataForMaterials($materials, $tags, 'tag');
+    }
+
+    public static function findSeveralMaterials($arrayWithId): ?array
+    {
+        $materials = [];
+        foreach ($arrayWithId as $id) {
+            $materials[] = Material::findById($id)[0];
+        }
+
+        if (empty($materials)) {
+            return null;
+        }
 
         $idData = [];
         foreach ($materials as $material) {

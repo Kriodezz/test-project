@@ -102,7 +102,6 @@ abstract class AbstractModel
                 $sql,
                 [':id' => $id]
             );
-
         }
         return $data;
     }
