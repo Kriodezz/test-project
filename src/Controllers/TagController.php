@@ -83,4 +83,11 @@ class TagController extends AbstractController
             ['title' => 'Материалы', 'data' => $arrayObject]
         );
     }
+
+    public function delete($tagName, $materialId)
+    {
+        $tag = Tag::findByColumnStrict('title',$tagName)[0];
+        $tag->deleteTagFromMaterial($materialId);
+        header('Location: /material/show/' . $materialId);
+    }
 }

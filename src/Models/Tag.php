@@ -26,6 +26,16 @@ class Tag extends AbstractModel
         $this->title = $title;
     }
 
+    public function deleteTagFromMaterial($idMaterial): void
+    {
+        $db = Db::getInstance();
+        $db->execute(
+            'DELETE FROM material_tag 
+            WHERE material_id = :material_id AND tag_id = :tag_id',
+            [':material_id' => $idMaterial, ':tag_id' => $this->getId()]
+        );
+    }
+
     public static function getMaterialsByTag($idTag): ?array
     {
         $db = Db::getInstance();

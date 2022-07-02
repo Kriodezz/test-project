@@ -106,15 +106,6 @@ abstract class AbstractModel
         return $data;
     }
 
-    public static function addPropertyToMaterial(int $idProperty, int $idMaterial): void
-    {
-        $db = Db::getInstance();
-        $sql = 'INSERT INTO material_' . static::TABLE_NAME .
-            ' (material_id, ' . static::TABLE_NAME . '_id) 
-               VALUE (:idMaterial, :idProperty)';
-        $db->execute($sql, [':idMaterial' => $idMaterial, ':idProperty' => $idProperty]);
-    }
-
     public function save(): void
     {
         $property = $this->getProperty();
@@ -147,6 +138,20 @@ echo '111';
 
         $this->id = $db->getLastInsertId();
         $this->refresh();
+    }
+
+    public function delete(): void
+    {
+
+    }
+
+    public static function addPropertyToMaterial(int $idProperty, int $idMaterial): void
+    {
+        $db = Db::getInstance();
+        $sql = 'INSERT INTO material_' . static::TABLE_NAME .
+            ' (material_id, ' . static::TABLE_NAME . '_id) 
+               VALUE (:idMaterial, :idProperty)';
+        $db->execute($sql, [':idMaterial' => $idMaterial, ':idProperty' => $idProperty]);
     }
 
     protected function getProperty(): array
