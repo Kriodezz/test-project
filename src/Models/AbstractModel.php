@@ -35,6 +35,15 @@ abstract class AbstractModel
         return $db->queryArray('SELECT * FROM ' . static::TABLE_NAME);
     }
 
+    public static function findById($id): array
+    {
+        $db = Db::getInstance();
+        return $db->queryArray(
+            'SELECT * FROM ' . static::TABLE_NAME . ' WHERE id = :id',
+            [':id' => $id]
+        );
+    }
+
     public static function getDataForMaterials(array $idData): array
     {
         $db = Db::getInstance();
@@ -55,5 +64,14 @@ abstract class AbstractModel
             );
         }
         return $data;
+    }
+
+    public static function addPropertyToMaterial(int $idProperty, int $idMaterial): void
+    {
+        $db = Db::getInstance();
+        $sql = 'INSERT INTO material_' . static::TABLE_NAME .
+               ' (material_id, ' . static::TABLE_NAME . '_id) 
+               VALUE (:idMaterial, :idProperty)';
+        $db->execute($sql, [':idMaterial' => $idMaterial, ':idProperty' => $idProperty]);
     }
 }

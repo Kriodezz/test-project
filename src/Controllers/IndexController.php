@@ -13,13 +13,14 @@ class IndexController extends AbstractController
         $arrayObject = [];
         foreach ($arrayData as $data) {
             $arrayObject[] = new MaterialForDisplay(
-                                                    (int) $data['id'],
-                                                    $data['title'],
-                                                    $data['type'],
-                                                    $data['author'],
-                                                    $data['category'],
-                                                    $data['tag']
-                                                    );
+                (int) $data['id'],
+                $data['title'],
+                $data['type'],
+                $data['author'],
+                $data['category'],
+                $data['tag'],
+                $data['description']
+            );
         }
 
         $this->view->renderHtml(

@@ -1,4 +1,4 @@
-<?php include __DIR__ . '/header.php'; ?>
+<?php include __DIR__ . '/header.php';  ?>
 
 <div class="container">
     <h1 class="my-md-5 my-4">Материалы</h1>

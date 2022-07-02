@@ -8,6 +8,7 @@ class Material extends AbstractModel
 
     protected string $title;
     protected string $type;
+    protected ?string $description;
 
     /**
      * @return string
@@ -41,4 +42,19 @@ class Material extends AbstractModel
         $this->type = $type;
     }
 
+    /**
+     * @return string|null
+     */
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string|null $description
+     */
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
+    }
 }

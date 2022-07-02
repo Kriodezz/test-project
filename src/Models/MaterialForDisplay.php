@@ -14,14 +14,16 @@ class MaterialForDisplay extends AbstractModel
     protected ?array $authors;
     protected array $categories;
     protected array $tags;
+    protected ?string $description;
 
     /**
      * @param int $id
      * @param string $title
      * @param string $type
-     * @param ?array $authors
+     * @param array|null $authors
      * @param array $categories
      * @param array $tags
+     * @param string|null $description
      */
     public function __construct(
                                 int $id,
@@ -29,7 +31,8 @@ class MaterialForDisplay extends AbstractModel
                                 string $type,
                                 ?array $authors,
                                 array $categories,
-                                array $tags
+                                array $tags,
+                                ?string $description
                                 )
     {
         $this->id = $id;
@@ -38,6 +41,7 @@ class MaterialForDisplay extends AbstractModel
         $this->authors = $authors;
         $this->categories = $categories;
         $this->tags = $tags;
+        $this->description = $description;
     }
 
     /**
@@ -57,7 +61,7 @@ class MaterialForDisplay extends AbstractModel
     }
 
     /**
-     * @return ?array
+     * @return array|null
      */
     public function getAuthors(): ?array
     {
@@ -80,6 +84,11 @@ class MaterialForDisplay extends AbstractModel
         return $this->tags;
     }
 
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
     public static function findAllMaterial(): array
     {
         $materials = Material::findAll();
@@ -96,5 +105,22 @@ class MaterialForDisplay extends AbstractModel
         $materials = AbstractController::addDataForMaterials($materials, $authors, 'author');
         $materials = AbstractController::addDataForMaterials($materials, $categories, 'category');
         return AbstractController::addDataForMaterials($materials, $tags, 'tag');
+    }
+
+    public static function findOneMaterial($id): ?array
+    {
+        $material = Material::findById($id);
+
+        if (empty($material)) {
+           return null;
+        }
+
+        $authors = Author::getDataForMaterials([$id]);
+        $categories = Category::getDataForMaterials([$id]);
+        $tags = Tag::getDataForMaterials([$id]);
+
+        $material= AbstractController::addDataForMaterials($material, $authors, 'author');
+        $material = AbstractController::addDataForMaterials($material, $categories, 'category');
+        return AbstractController::addDataForMaterials($material, $tags, 'tag');
     }
 }
