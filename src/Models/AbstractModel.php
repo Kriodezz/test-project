@@ -35,6 +35,12 @@ abstract class AbstractModel
         return $db->queryArray('SELECT * FROM ' . static::TABLE_NAME);
     }
 
+    public static function findAllInObject(): array
+    {
+        $db = Db::getInstance();
+        return $db->query('SELECT * FROM ' . static::TABLE_NAME, [], static::class);
+    }
+
     public static function findById($id): array
     {
         $db = Db::getInstance();

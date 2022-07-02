@@ -9,8 +9,12 @@ class TagController extends AbstractController
 {
     public function show()
     {
+        $allTags = Tag::findAllInObject();
+
         $this->view->renderHtml(
-            'list-tag.php', ['title' => 'Теги']);
+            'list-tag.php',
+            ['title' => 'Теги', 'tags' => $allTags]
+        );
     }
 
     public function addTo($materialId)
