@@ -4,6 +4,7 @@ namespace Tara\TestProject\Models;
 
 use Tara\TestProject\Controllers\AbstractController;
 use Tara\TestProject\Exception\InvalidArgumentException;
+use Tara\TestProject\Services\Db;
 
 class MaterialWithAllData extends AbstractModel
 {
@@ -229,5 +230,32 @@ class MaterialWithAllData extends AbstractModel
         Category::addPropertyToMaterial($idCategory, $material->getId());
 
         return $material->getId();
+    }
+
+    //Удаление материала
+    public static function deleteMaterial($idMaterial): void
+    {
+        //Подключение к БД
+        $db = Db::getInstance();
+
+        //Удаление из таблицы material
+        $db->execute(
+            'DELETE FROM material WHERE id = :id',
+            [':id' => $idMaterial]
+        );
+
+        //Удаление связей
+        $db->execute(
+            'DELETE FROM material_author WHERE material_id = :id',
+            [':id' => $idMaterial]
+        );
+        $db->execute(
+            'DELETE FROM material_category WHERE material_id = :id',
+            [':id' => $idMaterial]
+        );
+        $db->execute(
+            'DELETE FROM material_tag WHERE material_id = :id',
+            [':id' => $idMaterial]
+        );
     }
 }

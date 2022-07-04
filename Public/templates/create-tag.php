@@ -15,7 +15,10 @@
                                 Пожалуйста, заполните поле
                             </div>
                         </div>
-                        <button class="btn btn-primary" type="submit"><?php echo $button; ?></button>
+                        <button
+                                class="btn btn-primary"
+                                type="submit"><?php echo $button; ?>
+                        </button>
                     </form>
                 </div>
             </div>

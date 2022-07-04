@@ -1,10 +1,11 @@
 <?php include __DIR__ . '/header.php'; ?>
 
+<!--Страница добавления и редактирования материала -->
 <div class="container">
-    <h1 class="my-md-5 my-4">Добавить материал</h1>
+    <h1 class="my-md-5 my-4"><?php echo $act; ?> материал</h1>
     <div class="row">
         <div class="col-lg-5 col-md-8">
-            <form action="/material/create" method="post">
+            <form action="<?php echo $action; ?>" method="post">
                 <div class="form-floating mb-3">
                     <select class="form-select" name="type" id="floatingSelectType">
                         <option selected>
@@ -89,7 +90,9 @@
                         Пожалуйста, заполните поле
                     </div>
                 </div>
-                <button class="btn btn-primary" type="submit">Добавить</button>
+                <button class="btn btn-primary" type="submit">
+                    <?php echo $button; ?>
+                </button>
             </form>
         </div>
     </div>
