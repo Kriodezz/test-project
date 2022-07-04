@@ -28,11 +28,15 @@
                     <div class="d-flex text-break">
                         <p class="col fw-bold mw-25 mw-sm-30 me-2">Категория</p>
                         <p class="col">
-                            <?php foreach ($material->getCategories() as $keyCategory => $category) {
-                                echo $category;
-                                if ($keyCategory < (count($material->getCategories()) - 1)) {
-                                    echo ' / ';
+                            <?php if ($material->getCategories() !== null) {
+                                foreach ($material->getCategories() as $keyCategory => $category) {
+                                    echo $category;
+                                    if ($keyCategory < (count($material->getCategories()) - 1)) {
+                                        echo ' / ';
+                                    }
                                 }
+                            } else {
+                                echo 'Категория отсутствует';
                             } ?>
                         </p>
                     </div>

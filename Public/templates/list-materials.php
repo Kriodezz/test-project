@@ -52,11 +52,15 @@
                     <?php echo $item->getType(); ?>
                 </td>
                 <td>
-                    <?php foreach ($item->getCategories() as $keyCategory => $category) {
-                        echo $category;
-                        if ($keyCategory < (count($item->getCategories()) - 1)) {
-                            echo ' / ';
+                    <?php if ($item->getCategories() !== null) {
+                        foreach ($item->getCategories() as $keyCategory => $category) {
+                            echo $category;
+                            if ($keyCategory < (count($item->getCategories()) - 1)) {
+                                echo ' / ';
+                            }
                         }
+                    } else {
+                        echo 'Категория отсутствует';
                     } ?>
                 </td>
                 <td class="text-nowrap text-end">

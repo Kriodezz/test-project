@@ -150,6 +150,15 @@ echo '111';
         $this->id = null;
     }
 
+    public function deleteRelations(): void
+    {
+        $db = Db::getInstance();
+        $db->execute(
+            'DELETE FROM material_' . static::TABLE_NAME . ' WHERE ' . static::TABLE_NAME . '_id = :id',
+            [':id' => $this->id]
+        );
+    }
+
     public static function addPropertyToMaterial(int $idProperty, int $idMaterial): void
     {
         $db = Db::getInstance();

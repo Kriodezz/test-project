@@ -127,6 +127,7 @@ class TagController extends AbstractController
     public function delete($idTag)
     {
         $tag = Tag::findByIdInObject($idTag);
+        $tag->deleteRelations();
         $tag->delete();
         header('Location: /tags/show');
     }

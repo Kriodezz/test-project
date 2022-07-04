@@ -10,7 +10,7 @@ class MaterialWithAllData extends AbstractModel
     protected string $title;
     protected string $type;
     protected ?array $authors;
-    protected array $categories;
+    protected ?array $categories;
     protected ?array $tags;
     protected ?string $description;
 
@@ -19,7 +19,7 @@ class MaterialWithAllData extends AbstractModel
      * @param string $title
      * @param string $type
      * @param array|null $authors
-     * @param array $categories
+     * @param array|null $categories
      * @param array|null $tags
      * @param string|null $description
      */
@@ -28,7 +28,7 @@ class MaterialWithAllData extends AbstractModel
         string  $title,
         string  $type,
         ?array  $authors,
-        array   $categories,
+        ?array   $categories,
         ?array   $tags,
         ?string $description
     )
@@ -67,9 +67,9 @@ class MaterialWithAllData extends AbstractModel
     }
 
     /**
-     * @return array
+     * @return array|null
      */
-    public function getCategories(): array
+    public function getCategories(): ?array
     {
         return $this->categories;
     }

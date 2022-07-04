@@ -57,6 +57,7 @@ class CategoryController extends AbstractController
     public function delete($idCategory)
     {
         $category = Category::findByIdInObject($idCategory);
+        $category->deleteRelations();
         $category->delete();
         header('Location: /categories/show');
     }
