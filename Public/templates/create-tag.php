@@ -29,7 +29,8 @@
                                 <p class="text-danger">
                                     <?php echo $e; ?>
                                 </p>
-                            <?php endforeach; } ?>
+                            <?php endforeach;
+                        } ?>
                         <div class="invalid-feedback">
                             Пожалуйста, заполните поле
                         </div>

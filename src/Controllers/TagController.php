@@ -113,7 +113,7 @@ class TagController extends AbstractController
             'create-tag.php',
             [
                 'title' => 'Теги',
-                'action' => '/tags/create',
+                'action' => '/tag/create',
                 'act' => 'Добавить',
                 'button' => 'Добавить',
                 'exceptions' => $dataExceptions ?? null
@@ -154,7 +154,7 @@ class TagController extends AbstractController
             [
                 'title' => 'Теги',
                 'tag' => $tag,
-                'action' => '/tags/edit/' . $idTag,
+                'action' => '/tag/edit/' . $idTag,
                 'act' => 'Редактировать',
                 'button' => 'Изменить',
                 'exceptions' => $dataExceptions ?? null
