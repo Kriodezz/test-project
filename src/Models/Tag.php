@@ -2,6 +2,7 @@
 
 namespace Tara\TestProject\Models;
 
+use Tara\TestProject\Exception\InvalidArgumentException;
 use Tara\TestProject\Services\Db;
 
 class Tag extends AbstractModel
@@ -52,5 +53,22 @@ class Tag extends AbstractModel
            $data[] = $result['material_id'];
         }
         return $data;
+    }
+
+    public static function createTag($data): void
+    {
+        $exceptions = new InvalidArgumentException();
+
+        if (empty($data['tag'])) {
+            $exceptions->setException('tag');
+        }
+
+        if (!empty($exceptions->getAllException())) {
+            throw $exceptions;
+        }
+
+        $tag = new Tag();
+        $tag->setTitle(htmlentities($data['tag']));
+        $tag->save();
     }
 }

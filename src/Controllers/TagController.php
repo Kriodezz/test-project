@@ -50,7 +50,7 @@ class TagController extends AbstractController
             exit();
         } else {
             try {
-                Tag::addPropertyToMaterial((int) $idTag, (int) $materialId);
+                Tag::addPropertyToMaterial((int)$idTag, (int)$materialId);
                 header('Location: /material/show/' . $materialId);
             } catch (\PDOException $e) {
                 header('Location: /material/show/' . $materialId);
@@ -87,6 +87,13 @@ class TagController extends AbstractController
 
     public function create()
     {
+        if (!empty($_POST)) {
+            try {
+                Tag::createTag($_POST);
+            } catch (InvalidArgumentException $exception) {
+                $dataExceptions = $exception->getAllException();
+            }
+        }
 
 
         $this->view->renderHtml(
@@ -124,7 +131,7 @@ class TagController extends AbstractController
 
     public function deleteFromMaterial($tagName, $materialId)
     {
-        $tag = Tag::findByColumnStrict('title',$tagName)[0];
+        $tag = Tag::findByColumnStrict('title', $tagName)[0];
         $tag->deleteTagFromMaterial($materialId);
         header('Location: /material/show/' . $materialId);
     }
