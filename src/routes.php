@@ -27,23 +27,23 @@ return [
     //Отображение страницы с тегами
     '~^tags/show$~' => [TagController::class, 'show'],
     //Создание нового тега
-    '~^tags/create$~' => [TagController::class, 'create'],
+    '~^tag/create$~' => [TagController::class, 'create'],
     //Редактирование тега
-    '~^tags/edit/(\d+)$~' => [TagController::class, 'edit'],
+    '~^tag/edit/(\d+)$~' => [TagController::class, 'edit'],
     //Добавление значения тега к материалу
     '~^tags/add-to/(\d+)$~' => [TagController::class, 'addTo'],
     //Удаление значения тега из материала
     '~^tag/(.+)/delete/(\d+)$~' => [TagController::class, 'deleteFromMaterial'],
     //Удаление тега
-    '~^tags/delete/(\d+)$~' => [TagController::class, 'delete'],
+    '~^tag/delete/(\d+)$~' => [TagController::class, 'delete'],
     //Поиск по id тега
     '~^find/tag/(.+)$~' => [TagController::class, 'findByTag'],
     //Отображение страницы с категориями
     '~^categories/show$~' => [CategoryController::class, 'show'],
     //Создание новой категории
-    '~^categories/create$~' => [CategoryController::class, 'create'],
+    '~^category/create$~' => [CategoryController::class, 'create'],
     //Редактирование категории
-    '~^categories/edit/(\d+)$~' => [CategoryController::class, 'edit'],
+    '~^category/edit/(\d+)$~' => [CategoryController::class, 'edit'],
     //Удаление категории
-    '~^categories/delete/(\d+)$~' => [CategoryController::class, 'delete'],
+    '~^category/delete/(\d+)$~' => [CategoryController::class, 'delete'],
 ];
