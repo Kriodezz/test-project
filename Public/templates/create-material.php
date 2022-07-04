@@ -1,6 +1,13 @@
 <?php include __DIR__ . '/header.php'; ?>
 
 <!--Страница добавления и редактирования материала -->
+
+<!-- В зависимости от того, создаётся новый материал или редактируется старый,
+переменные $act, $action и $button принимают соответствующие значения -->
+
+<!-- В случае не прохождения валидации данных, сведения об ошибках
+передаются в переменную $exceptions и выводятся под соответствующими полями -->
+
 <div class="container">
     <h1 class="my-md-5 my-4"><?php echo $act; ?> материал</h1>
     <div class="row">
@@ -83,8 +90,8 @@
                               name="description"
                               placeholder="Напишите краткое описание"
                               id="floatingDescription"
-                              style="height: 100px"><?php echo $_POST['description'] ?? ''; ?>
-                    </textarea>
+                              style="height: 100px"
+                    ><?php echo $_POST['description'] ?? ''; ?></textarea>
                     <label for="floatingDescription">Описание</label>
                     <div class="invalid-feedback">
                         Пожалуйста, заполните поле

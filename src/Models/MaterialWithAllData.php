@@ -152,8 +152,14 @@ class MaterialWithAllData extends AbstractModel
         return AbstractController::addDataForMaterials($material, $tags, 'tag');
     }
 
+    /*
+     * Создание нового материала и возвращение его id
+     */
     public static function createNewMaterial($data): int
     {
+        /*
+         * Валидация полученных данных
+         */
         $exceptions = new InvalidArgumentException();
 
         if (($data['type'] === 'Выберите тип') ||
@@ -199,6 +205,10 @@ class MaterialWithAllData extends AbstractModel
             throw $exceptions;
         }
 
+        /*
+         * Если валидация пройдена создаем объект материал с данными для записи
+         * в таблицу material и сохраняем данные в таблицу
+         */
         $material = new Material();
         $material->setTitle(htmlentities($data['title']));
         $material->setType($data['type']);
@@ -209,6 +219,11 @@ class MaterialWithAllData extends AbstractModel
         }
         $material->save();
 
+        /*
+         * Если были переданы данные об авторах проверяем их наличие в таблице author
+         * и добавляем связь с создаваемым материалом.
+         * Если автора в БД нет - он заносится в БД
+         */
         if (!empty($arrayObjectAuthors)) {
             $AllAuthors = Author::getDataColumn('title');
 
@@ -225,10 +240,12 @@ class MaterialWithAllData extends AbstractModel
             }
         }
 
+        //Получение id категории создаваемого материала и добавление связи
         $category = Category::findByColumnStrict('title', $data['category']);
         $idCategory = $category[0]->getId();
         Category::addPropertyToMaterial($idCategory, $material->getId());
 
+        //Возвращение id создаваемого материала
         return $material->getId();
     }
 

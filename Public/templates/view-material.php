@@ -1,10 +1,15 @@
 <?php include __DIR__ . '/header.php'; ?>
-<!-- Футер не добавлен -->
+
+        <!-- Страница просмотра материала -->
         <div class="container">
+
+            <!-- Название -->
             <h1 class="my-md-5 my-4"><?php echo $material->getTitle(); ?></h1>
             <div class="row mb-3">
                 <div class="col-lg-6 col-md-8">
                     <div class="d-flex text-break">
+
+                        <!-- Авторы -->
                         <p class="col fw-bold mw-25 mw-sm-30 me-2">Авторы</p>
                         <p class="col">
                             <?php if ($material->getAuthors() !== null) {
@@ -19,12 +24,16 @@
                             } ?>
                         </p>
                     </div>
+
+                    <!-- Тип -->
                     <div class="d-flex text-break">
                         <p class="col fw-bold mw-25 mw-sm-30 me-2">Тип</p>
                         <p class="col">
                             <?php echo $material->getType(); ?>
                         </p>
                     </div>
+
+                    <!-- Категории -->
                     <div class="d-flex text-break">
                         <p class="col fw-bold mw-25 mw-sm-30 me-2">Категория</p>
                         <p class="col">
@@ -40,6 +49,8 @@
                             } ?>
                         </p>
                     </div>
+
+                    <!-- Описание -->
                     <div class="d-flex text-break">
                         <p class="col fw-bold mw-25 mw-sm-30 me-2">Описание</p>
                         <p class="col">
@@ -52,8 +63,12 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Блок тегов -->
             <div class="row">
                 <div class="col-md-6">
+
+                    <!-- Добавление тегов -->
                     <form action="/tags/add-to/<?php echo $material->getId(); ?>" method="post">
                         <h3>Теги</h3>
                         <div class="input-group mb-3">
@@ -71,6 +86,8 @@
                             <button class="btn btn-primary" type="submit">Добавить</button>
                         </div>
                     </form>
+
+                    <!-- Список тегов материала -->
                     <ul class="list-group mb-4">
                         <?php if ($material->getTags() !== null) {
                             foreach ($material->getTags() as $tag): ?>
@@ -78,6 +95,8 @@
                             <a href="/find/tag/<?php echo $tag; ?>" class="me-3">
                                 <?php echo $tag;?>
                             </a>
+
+                            <!-- Удаление тега из материала -->
                             <a href="/tag/<?php echo $tag; ?>/delete/<?php echo $material->getId(); ?>"
                                class="text-decoration-none">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -92,6 +111,8 @@
                         } ?>
                     </ul>
                 </div>
+
+                <!-- Ссылки -->
                 <div class="col-md-6">
                     <div class="d-flex justify-content-between mb-3">
                         <h3>Ссылки</h3>

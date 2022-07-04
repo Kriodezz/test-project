@@ -9,6 +9,9 @@ use Tara\TestProject\Models\Tag;
 
 class TagController extends AbstractController
 {
+    /*
+     * Отображение списка тегов
+     */
     public function show()
     {
         $allTags = Tag::findAllInObject();
@@ -19,6 +22,9 @@ class TagController extends AbstractController
         );
     }
 
+    /*
+     * Добавление тега к материалу
+     */
     public function addTo($materialId)
     {
         $material = Material::findById($materialId);
@@ -58,6 +64,9 @@ class TagController extends AbstractController
         }
     }
 
+    /*
+     * Поиск и отображение списка материалов по тегу
+     */
     public function findByTag($tag)
     {
         $currentTag = Tag::findByColumnStrict('title', $tag);
@@ -85,6 +94,9 @@ class TagController extends AbstractController
         );
     }
 
+    /*
+     * Создание нового тега
+     */
     public function create()
     {
         if (!empty($_POST)) {
@@ -96,7 +108,6 @@ class TagController extends AbstractController
                 $dataExceptions = $exception->getAllException();
             }
         }
-
 
         $this->view->renderHtml(
             'create-tag.php',
@@ -110,12 +121,39 @@ class TagController extends AbstractController
         );
     }
 
+    /*
+     * Редактирование существующего тега
+     */
     public function edit($idTag)
     {
+        $tag = Tag::findByIdInObject($idTag);
+
+        if ($tag === null) {
+            $this->view->renderHtml(
+                'errors/error.php',
+                [
+                    'error' => 'Такого тега нет!',
+                    'description' => 'Вы ввели неправильный тег.'
+                ],
+                404);
+            exit();
+        }
+
+        if (!empty($_POST)) {
+            try {
+                $tag->updateTag($_POST);
+                header('Location: /tags/show');
+                exit();
+            } catch (InvalidArgumentException $exception) {
+                $dataExceptions = $exception->getAllException();
+            }
+        }
+
         $this->view->renderHtml(
             'create-tag.php',
             [
                 'title' => 'Теги',
+                'tag' => $tag,
                 'action' => '/tags/edit/' . $idTag,
                 'act' => 'Редактировать',
                 'button' => 'Изменить',
@@ -124,6 +162,9 @@ class TagController extends AbstractController
         );
     }
 
+    /*
+     * Удаление тега
+     */
     public function delete($idTag)
     {
         $tag = Tag::findByIdInObject($idTag);
@@ -132,6 +173,9 @@ class TagController extends AbstractController
         header('Location: /tags/show');
     }
 
+    /*
+     * Удаление тега из материала
+     */
     public function deleteFromMaterial($tagName, $materialId)
     {
         $tag = Tag::findByColumnStrict('title', $tagName)[0];

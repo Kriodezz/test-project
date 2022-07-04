@@ -60,7 +60,12 @@ class Tag extends AbstractModel
         $exceptions = new InvalidArgumentException();
 
         if (empty($data['tag'])) {
-            $exceptions->setException('tag');
+            $exceptions->setException('tag', 'Имя тега не должно быть пустым');
+        }
+
+        $allTags = Tag::getDataColumn('title');
+        if (in_array($data['tag'], $allTags)) {
+            $exceptions->setException('tag', 'Такой тег уже существует');
         }
 
         if (!empty($exceptions->getAllException())) {
@@ -70,5 +75,21 @@ class Tag extends AbstractModel
         $tag = new Tag();
         $tag->setTitle(htmlentities($data['tag']));
         $tag->save();
+    }
+
+    public function updateTag($data)
+    {
+        $exceptions = new InvalidArgumentException();
+
+        if (empty($data['tag'])) {
+            $exceptions->setException('tag');
+        }
+
+        if (!empty($exceptions->getAllException())) {
+            throw $exceptions;
+        }
+
+        $this->setTitle(htmlentities($data['tag']));
+        $this->save();
     }
 }

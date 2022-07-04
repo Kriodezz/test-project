@@ -4,7 +4,7 @@
     <h1 class="my-md-5 my-4">Материалы</h1>
 
     <!-- Добавление нового материала -->
-    <a class="btn btn-primary mb-4" href="<?php echo 'material/create'; ?>" role="button">
+    <a class="btn btn-primary mb-4" href="<?php echo '/material/create'; ?>" role="button">
         Добавить
     </a>
 

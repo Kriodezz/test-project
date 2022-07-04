@@ -16,6 +16,9 @@ abstract class AbstractModel
         return $this->id;
     }
 
+    /*
+     * Поиск в поле таблицы по регулярному выражению
+     */
     public static function findByColumn(string $columnName, $value): ?array
     {
         $value = "%$value%";
@@ -29,6 +32,9 @@ abstract class AbstractModel
         return $result ?: null;
     }
 
+    /*
+     * Поиск в поле таблицы по значению
+     */
     public static function findByColumnStrict(string $columnName, $value): ?array
     {
         $db = Db::getInstance();
@@ -73,6 +79,9 @@ abstract class AbstractModel
         return $data ? $data[0] : null;
     }
 
+    /*
+     * Получение всех записей в одном поле
+     */
     public static function getDataColumn($column): ?array
     {
         $db = Db::getInstance();
@@ -111,7 +120,7 @@ abstract class AbstractModel
         $property = $this->getProperty();
 
         if ($this->id !== null) {
-echo '111';
+            $this->update($property);
         } else {
             $this->insert($property);
         }
@@ -140,6 +149,27 @@ echo '111';
         $this->refresh();
     }
 
+    public function update($data): void
+    {
+        $columnsToParams = [];
+        $paramsToValues = [];
+        $index = 1;
+        foreach ($data as $column => $value) {
+            if ($column === 'id') {
+                continue;
+            }
+            $param = ':param' . $index; // :param1
+            $columnsToParams[] = $column . ' = ' . $param; // column1 = :param1
+            $paramsToValues[$param] = $value; // [:param1 => value1]
+            $index++;
+        }
+        $sql = 'UPDATE ' . static::TABLE_NAME .
+               ' SET ' . implode(', ', $columnsToParams) .
+               ' WHERE id = ' . $this->id;
+        $db = Db::getInstance();
+        $db->execute($sql, $paramsToValues);
+    }
+
     public function delete(): void
     {
         $db = Db::getInstance();
@@ -159,6 +189,9 @@ echo '111';
         );
     }
 
+    /*
+     * Добавление данных в таблицы связей
+     */
     public static function addPropertyToMaterial(int $idProperty, int $idMaterial): void
     {
         $db = Db::getInstance();

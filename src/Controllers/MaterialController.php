@@ -73,17 +73,23 @@ class MaterialController extends AbstractController
     {
         if (!empty($_POST)) {
             try {
-
+                //Создаем записи в БД, получаем id созданного материала
                $materialId = MaterialWithAllData::createNewMaterial($_POST);
+
+               //Редирект на страницу просмотра с новым материалом
                header('Location: /material/show/' . $materialId);
                exit();
 
+            /*
+             * При неуспешной валидации сведения об ошибках записываются
+             * в $dataExceptions и передаются в шаблон
+             */
             } catch (InvalidArgumentException $exception) {
                 $dataExceptions = $exception->getAllException();
             }
         }
 
-        //Получение всех категорий
+        //Получение всех категорий для отображения в шаблоне
         $allCategory = Category::findAllInObject();
 
         //Отображение шаблона создания и редактирования материала
@@ -92,7 +98,7 @@ class MaterialController extends AbstractController
             [
                 'title' => 'Материалы',
                 'categories' => $allCategory,
-                'action' => 'material/create',
+                'action' => '/material/create',
                 'act' => 'Добавить',
                 'button' => 'Добавить',
                 'exceptions' => $dataExceptions ?? null
@@ -103,10 +109,9 @@ class MaterialController extends AbstractController
     /*
      * Редактирование материала
      */
-
     public function edit($idMaterial)
     {
-        //Получение всех категорий
+        //Получение всех категорий для отображения в шаблоне
         $allCategory = Category::findAllInObject();
 
         //Отображение шаблона создания и редактирования материала
@@ -115,7 +120,7 @@ class MaterialController extends AbstractController
             [
                 'title' => 'Материалы',
                 'categories' => $allCategory,
-                'action' => 'material/create' . $idMaterial,
+                'action' => '/material/create' . $idMaterial,
                 'act' => 'Редактировать',
                 'button' => 'Изменить',
                 'exceptions' => $dataExceptions ?? null
