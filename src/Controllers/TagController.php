@@ -90,6 +90,8 @@ class TagController extends AbstractController
         if (!empty($_POST)) {
             try {
                 Tag::createTag($_POST);
+                header('Location: /tags/show');
+                exit();
             } catch (InvalidArgumentException $exception) {
                 $dataExceptions = $exception->getAllException();
             }

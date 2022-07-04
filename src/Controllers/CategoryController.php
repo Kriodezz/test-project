@@ -21,6 +21,8 @@ class CategoryController extends AbstractController
         if (!empty($_POST)) {
             try {
                 Category::createCategory($_POST);
+                header('Location: /categories/show');
+                exit();
             } catch (InvalidArgumentException $exception) {
                 $dataExceptions = $exception->getAllException();
             }
@@ -36,5 +38,26 @@ class CategoryController extends AbstractController
                 'exceptions' => $dataExceptions ?? null
             ]
         );
+    }
+
+    public function edit($idTag)
+    {
+        $this->view->renderHtml(
+            'create-category.php',
+            [
+                'title' => 'Категории',
+                'action' => '/categories/edit/' . $idTag,
+                'act' => 'Редактировать',
+                'button' => 'Изменить',
+                'exceptions' => $dataExceptions ?? null
+            ]
+        );
+    }
+
+    public function delete($idCategory)
+    {
+        $category = Category::findByIdInObject($idCategory);
+        $category->delete();
+        header('Location: /categories/show');
     }
 }
