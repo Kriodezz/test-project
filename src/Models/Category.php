@@ -31,7 +31,12 @@ class Category extends AbstractModel
         $exceptions = new InvalidArgumentException();
 
         if (empty($data['category'])) {
-            $exceptions->setException('category');
+            $exceptions->setException('category', 'Название не должно быть пустым');
+        }
+
+        $allCategory = Category::getDataColumn('title');
+        if (in_array($data['category'], $allCategory)) {
+            $exceptions->setException('category', 'Такая категория уже существует');
         }
 
         if (!empty($exceptions->getAllException())) {
@@ -41,5 +46,21 @@ class Category extends AbstractModel
         $category = new Category();
         $category->setTitle(htmlentities($data['category']));
         $category->save();
+    }
+
+    public function updateCategory($data)
+    {
+        $exceptions = new InvalidArgumentException();
+
+        if (empty($data['category'])) {
+            $exceptions->setException('category');
+        }
+
+        if (!empty($exceptions->getAllException())) {
+            throw $exceptions;
+        }
+
+        $this->setTitle(htmlentities($data['category']));
+        $this->save();
     }
 }

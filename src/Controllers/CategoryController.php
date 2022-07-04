@@ -32,7 +32,7 @@ class CategoryController extends AbstractController
             'create-category.php',
             [
                 'title' => 'Категории',
-                'action' => '/categories/create',
+                'action' => '/category/create',
                 'act' => 'Добавить',
                 'button' => 'Добавить',
                 'exceptions' => $dataExceptions ?? null
@@ -40,13 +40,37 @@ class CategoryController extends AbstractController
         );
     }
 
-    public function edit($idTag)
+    public function edit($idCategory)
     {
+        $category = Category::findByIdInObject($idCategory);
+var_dump($category); var_dump($_POST);
+        if ($category === null) {
+            $this->view->renderHtml(
+                'errors/error.php',
+                [
+                    'error' => 'Такой категории нет!',
+                    'description' => 'Вы выбрали неправильную категорию.'
+                ],
+                404);
+            exit();
+        }
+
+        if (!empty($_POST)) {
+            try {
+                $category->updateCategory($_POST);
+                header('Location: /categories/show');
+                exit();
+            } catch (InvalidArgumentException $exception) {
+                $dataExceptions = $exception->getAllException();
+            }
+        }
+
         $this->view->renderHtml(
             'create-category.php',
             [
                 'title' => 'Категории',
-                'action' => '/categories/edit/' . $idTag,
+                'category' => $category,
+                'action' => '/category/edit/' . $idCategory,
                 'act' => 'Редактировать',
                 'button' => 'Изменить',
                 'exceptions' => $dataExceptions ?? null

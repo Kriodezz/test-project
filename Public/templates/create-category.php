@@ -6,11 +6,24 @@
                 <div class="col-lg-5 col-md-8">
                     <form action="<?php echo $action; ?>" method="post">
                         <div class="form-floating mb-3">
-                            <input type="text" name="category" class="form-control" placeholder="Напишите название" id="floatingName">
+                            <input type="text"
+                                   name="category"
+                                   value="<?php if ($act === 'Добавить') {
+                                       echo $_POST['category'] ?? '';
+                                   } else {
+                                       echo $_POST['category'] ?? $category->getTitle();
+                                   } ?>"
+                                   class="form-control"
+                                   placeholder="Напишите название"
+                                   id="floatingName">
                             <label for="floatingName">Название</label>
-                            <?php if (isset($exceptions['category'])) { ?>
-                                <p class="text-danger">Имя категории не должно быть пустым</p>
-                            <?php } ?>
+                            <?php if (isset($exceptions['category'])) {
+                                foreach ($exceptions['category'] as $e): ?>
+                                    <p class="text-danger">
+                                        <?php echo $e; ?>
+                                    </p>
+                                <?php endforeach;
+                            } ?>
                             <div class="invalid-feedback">
                                 Пожалуйста, заполните поле
                             </div>
