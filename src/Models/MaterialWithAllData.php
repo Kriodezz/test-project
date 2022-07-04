@@ -164,7 +164,7 @@ class MaterialWithAllData extends AbstractModel
             $exceptions->setException('type');
         }
 
-        $allCategories = Category::getDataColumn('id');
+        $allCategories = Category::getDataColumn('title');
         if (($data['category'] === 'Выберите категорию') ||
             !in_array(
                 $data['category'],
@@ -224,7 +224,9 @@ class MaterialWithAllData extends AbstractModel
             }
         }
 
-        Category::addPropertyToMaterial($data['category'], $material->getId());
+        $category = Category::findByColumnStrict('title', $data['category']);
+        $idCategory = $category[0]->getId();
+        Category::addPropertyToMaterial($idCategory, $material->getId());
 
         return $material->getId();
     }

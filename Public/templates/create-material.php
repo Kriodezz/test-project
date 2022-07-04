@@ -7,7 +7,9 @@
             <form action="/material/create" method="post">
                 <div class="form-floating mb-3">
                     <select class="form-select" name="type" id="floatingSelectType">
-                        <option selected>Выберите тип</option>
+                        <option selected>
+                            <?php echo $_POST['type'] ?? 'Выберите тип'; ?>
+                        </option>
                         <option value="Книга">Книга</option>
                         <option value="Статья">Статья</option>
                         <option value="Видео">Видео</option>
@@ -26,10 +28,10 @@
                 <div class="form-floating mb-3">
                     <select class="form-select" name="category" id="floatingSelectCategory">
                         <option selected>
-                            Выберите категорию
+                            <?php echo $_POST['category'] ?? 'Выберите категорию'; ?>
                         </option>
                         <?php foreach ($categories as $category): ?>
-                            <option value="<?php echo $category->getId(); ?>">
+                            <option value="<?php echo $category->getTitle(); ?>">
                                 <?php echo $category->getTitle(); ?>
                             </option>
                         <?php endforeach; ?>
@@ -43,7 +45,12 @@
                     </div>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control" name="title" placeholder="Напишите название" id="floatingName">
+                    <input type="text"
+                           class="form-control"
+                           name="title"
+                           value="<?php echo $_POST['title'] ?? ''; ?>"
+                           placeholder="Напишите название"
+                           id="floatingName">
                     <label for="floatingName">Название</label>
                     <?php if (isset($exceptions['title'])) { ?>
                         <p class="text-danger">Пожалуйста, введите название</p>
@@ -53,7 +60,12 @@
                     </div>
                 </div>
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control" name="authors" placeholder="Напишите авторов" id="floatingAuthor">
+                    <input type="text"
+                           class="form-control"
+                           name="authors"
+                           value="<?php echo $_POST['authors'] ?? ''; ?>"
+                           placeholder="Напишите авторов"
+                           id="floatingAuthor">
                     <label for="floatingAuthor">Авторы</label>
                     <?php if (isset($exceptions['authors'])) {
                         foreach ($exceptions['authors'] as $e): ?>
@@ -66,8 +78,12 @@
                     </div>
                 </div>
                 <div class="form-floating mb-3">
-                    <textarea class="form-control" name="description" placeholder="Напишите краткое описание" id="floatingDescription"
-                              style="height: 100px"></textarea>
+                    <textarea class="form-control"
+                              name="description"
+                              placeholder="Напишите краткое описание"
+                              id="floatingDescription"
+                              style="height: 100px"><?php echo $_POST['description'] ?? ''; ?>
+                    </textarea>
                     <label for="floatingDescription">Описание</label>
                     <div class="invalid-feedback">
                         Пожалуйста, заполните поле
