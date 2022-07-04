@@ -111,6 +111,32 @@ class MaterialController extends AbstractController
      */
     public function edit($idMaterial)
     {
+        //Получение массива со всеми данными для материала по id материала
+        $dataMaterial = MaterialWithAllData::findOneMaterial($idMaterial);
+
+        //Если данный материал не найден в базе, выводится страница с ошибкой
+        if ($dataMaterial === null) {
+            $this->view->renderHtml(
+                'errors/error.php',
+                [
+                    'error' => 'Данная статья не существует!',
+                    'description' => 'Вы ввели неправильный номер статьи.'
+                ],
+                404);
+            exit();
+        }
+
+        if (!empty($_POST)) {
+            try {
+                MaterialWithAllData::editMaterial($_POST);
+                $tag->updateTag($_POST);
+                header('Location: /tags/show');
+                exit();
+            } catch (InvalidArgumentException $exception) {
+                $dataExceptions = $exception->getAllException();
+            }
+        }
+
         //Получение всех категорий для отображения в шаблоне
         $allCategory = Category::findAllInObject();
 
@@ -119,6 +145,7 @@ class MaterialController extends AbstractController
             'create-material.php',
             [
                 'title' => 'Материалы',
+                'material' => $dataMaterial,
                 'categories' => $allCategory,
                 'action' => '/material/create' . $idMaterial,
                 'act' => 'Редактировать',

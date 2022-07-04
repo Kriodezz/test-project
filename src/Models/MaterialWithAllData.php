@@ -249,6 +249,11 @@ class MaterialWithAllData extends AbstractModel
         return $material->getId();
     }
 
+    public static function editMaterial($data)
+    {
+        //--------------
+    }
+
     //Удаление материала
     public static function deleteMaterial($idMaterial): void
     {
