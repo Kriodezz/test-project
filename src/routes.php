@@ -20,4 +20,5 @@ return [
     '~^tag/(.+)/delete/(\d+)$~' => [TagController::class, 'deleteFromMaterial'],
     '~^find/tag/(.+)$~' => [TagController::class, 'findByTag'],
     '~^categories/show$~' => [CategoryController::class, 'show'],
+    '~^categories/create~' => [CategoryController::class, 'create'],
 ];
