@@ -194,17 +194,23 @@ class TagController extends AbstractController
             $this->view->renderHtml(
                 'errors/error.php',
                 [
-                    'error' => 'Данная статья не существует!',
-                    'description' => 'Вы ввели неправильный номер статьи.'
+                    'error' => 'Данный материал не существует!',
+                    'description' => 'Вы ввели неправильный номер материала.'
                 ],
                 404);
             exit();
-        }
-
-        if ($tag !== null) {
+        } elseif ($tag === null) {
+            $this->view->renderHtml(
+                'errors/error.php',
+                [
+                    'error' => 'Данный тег не существует!',
+                    'description' => 'Вы ввели неправильный номер тега.'
+                ],
+                404);
+            exit();
+        } else {
             $tag->deleteTagFromMaterial($materialId);
+            header('Location: /material/show/' . $materialId);
         }
-
-        header('Location: /material/show/' . $materialId);
     }
 }

@@ -13,9 +13,11 @@
 </head>
 <body>
 
+
 <div class="content">
   <div class="container">
-    <h1><?php echo $error; ?></h1>
+      <a class="btn btn-primary mb-4" href="/" role="button">На главную</a>
+      <h1><?php echo $error; ?></h1>
       <p><?php echo $description ?? ''; ?></p>
   </div>
 </div>

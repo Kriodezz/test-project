@@ -4,12 +4,11 @@
  * Роутинг
  */
 
-use Tara\TestProject\Controllers\{
-    IndexController,
+use Tara\TestProject\Controllers\{IndexController,
+    LinkController,
     MaterialController,
     TagController,
-    CategoryController
-};
+    CategoryController};
 
 return [
     //Отображение страницы с материалами и поиском
@@ -21,9 +20,15 @@ return [
     //Создание нового материала
     '~^material/create$~' => [MaterialController::class, 'create'],
     //Редактирование материала
-    '~^material/edit/(\d+)$~' => [MaterialController::class, 'edit'],
+    '~^material/edit/(\d+)/(.+)$~' => [MaterialController::class, 'edit'],
     //Удаление материала
-    '~^material/delete/(\d+)$~' => [MaterialController::class, 'delete'],
+    '~^material/delete/(\d+)/(.+)$~' => [MaterialController::class, 'delete'],
+    //Добавление ссылки
+    '~^link/add/(\d+)$~' => [LinkController::class, 'create'],
+    //Редактирование ссылки
+    '~^link/add/(\d+)/(\d+)$~' => [LinkController::class, 'edit'],
+    //Удаление ссылки
+    '~^link/(\d+)/delete/(\d+)$~' => [LinkController::class, 'delete'],
     //Отображение страницы с тегами
     '~^tags/show$~' => [TagController::class, 'show'],
     //Создание нового тега

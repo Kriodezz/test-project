@@ -2,7 +2,6 @@
 
 namespace Tara\TestProject\Models;
 
-use Tara\TestProject\Exception\InvalidArgumentException;
 use Tara\TestProject\Services\Db;
 use Tara\TestProject\Services\Validation;
 
@@ -14,6 +13,7 @@ class MaterialWithAllData extends AbstractModel
     protected string $category;
     protected array $tags;
     protected ?string $description;
+    protected array $links;
 
     /**
      * @return string
@@ -58,6 +58,22 @@ class MaterialWithAllData extends AbstractModel
     public function getDescription(): ?string
     {
         return $this->description;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLinks(): array
+    {
+        return $this->links;
+    }
+
+    /**
+     * @param array $links
+     */
+    public function setLinks(array $links): void
+    {
+        $this->links = $links;
     }
 
     /**
@@ -174,10 +190,13 @@ class MaterialWithAllData extends AbstractModel
             return null;
         }
 
-        //Получение данных об авторах, категориях, тегах для материала
+        //Получение данных об авторах, категориях и тегах для материала
         $authors = Author::getDataForMaterials([$id])[0];
         $category = Category::getDataForMaterials([$id], 'simple')[0];
         $tags = Tag::getDataForMaterials([$id])[0];
+
+        //Получение ссылок материала
+        $links = Link::findByColumn('material_id', $id);
 
         //Создание объекта материала со всеми данными
         $materialWithAllData = new MaterialWithAllData();
@@ -188,6 +207,7 @@ class MaterialWithAllData extends AbstractModel
         $materialWithAllData->setAuthors($authors);
         $materialWithAllData->setCategory($category->getTitle());
         $materialWithAllData->setTags($tags);
+        $materialWithAllData->setLinks($links);
 
         return $materialWithAllData;
     }

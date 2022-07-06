@@ -1,23 +1,23 @@
 <?php include __DIR__ . '/header.php'; ?>
 
-<!-- Страница отображения тегов -->
-<div class="container">
-    <h1 class="my-md-5 my-4">Теги</h1>
+    <!-- Страница отображения тегов -->
+    <div class="container">
+        <h1 class="my-md-5 my-4">Теги</h1>
 
-    <!-- Добавление тега -->
-    <a class="btn btn-primary mb-4" href="/tag/create" role="button">Добавить</a>
-    <div class="row">
-        <div class="col-md-6">
-            <ul class="list-group mb-4">
-                <li class="list-group-item d-flex justify-content-between">
-                    <strong>Название</strong>
-                </li>
-                <?php foreach ($tags as $tag): ?>
-                    <li class="list-group-item list-group-item-action d-flex justify-content-between">
+        <!-- Добавление тега -->
+        <a class="btn btn-primary mb-4" href="/tag/create" role="button">Добавить</a>
+        <div class="row">
+            <div class="col-md-6">
+                <ul class="list-group mb-4">
+                    <li class="list-group-item d-flex justify-content-between">
+                        <strong>Название</strong>
+                    </li>
+                    <?php foreach ($tags as $tag): ?>
+                        <li class="list-group-item list-group-item-action d-flex justify-content-between">
                         <span class="me-3">
                                 <?php echo $tag->getTitle(); ?>
                         </span>
-                        <span class="text-nowrap">
+                            <span class="text-nowrap">
 
                             <!-- Редактирование тега -->
                             <a href="/tag/edit/<?php echo $tag->getId(); ?>" class="text-decoration-none me-2">
@@ -27,7 +27,7 @@
                                 </svg>
                             </a>
 
-                            <!-- Удаление тега -->
+                                <!-- Удаление тега -->
                             <a href="#deleteTag<?php echo $tag->getId(); ?>"
                                class="text-decoration-none"
                                data-bs-toggle="modal">
@@ -43,47 +43,49 @@
                                 </svg>
                             </a>
                         </span>
-                    </li>
-                    <div class="modal fade"
-                         id="deleteTag<?php echo $tag->getId(); ?>"
-                         aria-hidden="true"
-                         aria-labelledby="deleteTag"
-                         tabindex="-1">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="deleteTagLabel">
-                                        Удалить тег
-                                    </h5>
-                                    <button type="button"
-                                            class="btn-close"
-                                            data-bs-dismiss="modal"
-                                            aria-label="Close">
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>
-                                        Вы действительно хотите удалить тег <b><?php echo $tag->getTitle(); ?></b>
-                                    </p>
-                                </div>
-                                <div class="modal-footer">
-                                    <a href="/tag/delete/<?php echo $tag->getId(); ?>">
-                                        <button type="submit" class="btn btn-primary">
-                                            Удалить
+                        </li>
+
+                        <!-- Модальное окно подтверждения удаления тега -->
+                        <div class="modal fade"
+                             id="deleteTag<?php echo $tag->getId(); ?>"
+                             aria-hidden="true"
+                             aria-labelledby="deleteTag"
+                             tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="deleteTagLabel">
+                                            Удалить тег
+                                        </h5>
+                                        <button type="button"
+                                                class="btn-close"
+                                                data-bs-dismiss="modal"
+                                                aria-label="Close">
                                         </button>
-                                    </a>
-                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                                        Отмена
-                                    </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>
+                                            Вы действительно хотите удалить тег <b><?php echo $tag->getTitle(); ?></b>
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href="/tag/delete/<?php echo $tag->getId(); ?>">
+                                            <button type="submit" class="btn btn-primary">
+                                                Удалить
+                                            </button>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                            Отмена
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                <?php endforeach; ?>
-            </ul>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
         </div>
     </div>
-</div>
-</div>
+    </div>
 
 <?php include __DIR__ . '/footer.html';
