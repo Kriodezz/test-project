@@ -47,7 +47,7 @@
                         } ?>
                         </option>
                         <?php foreach ($AllCategories as $category): ?>
-                            <option value="<?php echo $category->getTitle(); ?>">
+                            <option value="<?php echo $category->getId(); ?>">
                                 <?php echo $category->getTitle(); ?>
                             </option>
                         <?php endforeach; ?>

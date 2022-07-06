@@ -31,7 +31,8 @@ class Validation
          * записывается ошибка с указанием на тип 'category'
          */
         $allCategories = Category::getDataColumn('title');
-        if (!in_array($data['category'], $allCategories)) {
+        $category = Category::findById($data['category']);
+        if (($category === null) || !in_array($category->getTitle(), $allCategories)) {
             $exceptions->setException('category');
         }
         /*

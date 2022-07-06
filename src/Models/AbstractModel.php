@@ -34,17 +34,27 @@ abstract class AbstractModel
 
     /*
      * Поиск в поле таблицы по значению
+     * По умолчанию используется таблица, связанная с моделью
+     * параметром $count указывается, сколько значений может быть найдено
+     * одно или несколько. По умолчанию - несколько.
      */
-    public static function findByColumn(string $columnName, $value): ?static
+    public static function findByColumn(string $columnName, $value, $count = 'multiple', $tableName = null): null|static|array
     {
+        $table = $tableName ?? static::TABLE_NAME;
         $db = Db::getInstance();
         $data = $db->query(
-            'SELECT * FROM ' . static::TABLE_NAME .
-            ' WHERE ' . $columnName . ' = :value',
+           "SELECT * FROM $table WHERE $columnName = :value",
             [':value' => $value],
             static::class
         );
-        return $data ? $data[0] : null;
+
+        if ($count === 'multiple') {
+            return $data ?? null;
+        } elseif ($count === 'simple') {
+            return $data ? $data[0] : null;
+        }
+
+        return null;
     }
 
     /*
@@ -94,7 +104,7 @@ abstract class AbstractModel
      * одно или несколько
      * (Например: Материал может иметь несколько авторов, а категорию - одну)
      */
-    public static function getDataForMaterials(array $idData, $count = 'multiple'): array|static
+    public static function getDataForMaterials(array $idData, $count = 'multiple'): array
     {
         $db = Db::getInstance();
 
@@ -120,6 +130,7 @@ abstract class AbstractModel
                 $data[] = $result[0];
             }
         }
+
         return $data;
     }
 

@@ -217,10 +217,8 @@ class MaterialWithAllData extends AbstractModel
             Author::existAuthor($authors, $material->getId());
         }
 
-        //Получение id категории создаваемого материала и добавление связи
-
-        $category = Category::findByColumn('title', $data['category']);
-        Category::addPropertyToMaterial($category->getId(), $material->getId());
+        //Добавление категории к материалу
+        Category::addPropertyToMaterial($data['category'], $material->getId());
 
         //Возвращение id создаваемого материала
         return $material->getId();
@@ -254,12 +252,11 @@ class MaterialWithAllData extends AbstractModel
             Author::existAuthor($authors, $material->getId());
         }
 
-        /*  Удаление старой категории из материала.
-         * Получение id новой категории создаваемого материала и добавление связи
+        /* Удаление старой категории из материала.
+         * Добавление новой категории к материалу
          */
         Category::deleteFromMaterial($material->getId());
-        $category = Category::findByColumn('title', $data['category']);
-        Category::addPropertyToMaterial($category->getId(), $material->getId());
+        Category::addPropertyToMaterial($data['category'], $material->getId());
     }
 
     //Удаление материала

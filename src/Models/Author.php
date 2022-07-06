@@ -32,7 +32,7 @@ class Author extends AbstractModel
         $allAuthors = Author::getDataColumn('title');
         foreach ($authors as $nameAuthor) {
             if (in_array($nameAuthor, $allAuthors)) {
-                $author = Author::findByColumn('title', $nameAuthor);
+                $author = Author::findByColumn('title', $nameAuthor, 'simple');
             } else {
                 $author = new Author();
                 $author->setName($nameAuthor);

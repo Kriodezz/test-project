@@ -43,7 +43,7 @@ class CategoryController extends AbstractController
     public function edit($idCategory)
     {
         $category = Category::findById($idCategory);
-var_dump($category); var_dump($_POST);
+
         if ($category === null) {
             $this->view->renderHtml(
                 'errors/error.php',
@@ -78,11 +78,24 @@ var_dump($category); var_dump($_POST);
         );
     }
 
+    /*
+     * Удаление категории. Если есть материалы, связанные с удаляемой
+     * категорией - она не будет удалена
+     */
     public function delete($idCategory)
     {
         $category = Category::findById($idCategory);
-        $category->deleteRelations();
-        $category->delete();
+        $relations = Category::findByColumn(
+            'category_id',
+            $category->getId(),
+            'multiple',
+            'material_category'
+        );
+
+        if (empty($relations)) {
+            $category->delete();
+        }
+
         header('Location: /categories/show');
     }
 }
