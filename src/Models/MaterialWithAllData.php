@@ -2,46 +2,18 @@
 
 namespace Tara\TestProject\Models;
 
-use Tara\TestProject\Controllers\AbstractController;
 use Tara\TestProject\Exception\InvalidArgumentException;
 use Tara\TestProject\Services\Db;
+use Tara\TestProject\Services\Validation;
 
 class MaterialWithAllData extends AbstractModel
 {
     protected string $title;
     protected string $type;
-    protected ?array $authors;
-    protected ?array $categories;
-    protected ?array $tags;
+    protected array $authors;
+    protected string $category;
+    protected array $tags;
     protected ?string $description;
-
-    /**
-     * @param int $id
-     * @param string $title
-     * @param string $type
-     * @param array|null $authors
-     * @param array|null $categories
-     * @param array|null $tags
-     * @param string|null $description
-     */
-    public function __construct(
-        int     $id,
-        string  $title,
-        string  $type,
-        ?array  $authors,
-        ?array   $categories,
-        ?array   $tags,
-        ?string $description
-    )
-    {
-        $this->id = $id;
-        $this->title = $title;
-        $this->type = $type;
-        $this->authors = $authors;
-        $this->categories = $categories;
-        $this->tags = $tags;
-        $this->description = $description;
-    }
 
     /**
      * @return string
@@ -60,25 +32,25 @@ class MaterialWithAllData extends AbstractModel
     }
 
     /**
-     * @return array|null
+     * @return array
      */
-    public function getAuthors(): ?array
+    public function getAuthors(): array
     {
         return $this->authors;
     }
 
     /**
-     * @return array|null
+     * @return string
      */
-    public function getCategories(): ?array
+    public function getCategory(): string
     {
-        return $this->categories;
+        return $this->category;
     }
 
     /**
-     * @return array|null
+     * @return array
      */
-    public function getTags(): ?array
+    public function getTags(): array
     {
         return $this->tags;
     }
@@ -88,68 +60,136 @@ class MaterialWithAllData extends AbstractModel
         return $this->description;
     }
 
-    public static function findAllMaterial(): ?array
+    /**
+     * @param int $id
+     */
+    public function setId(int $id): void
     {
-        $materials = Material::findAll();
-
-        if (empty($materials)) {
-            return null;
-        }
-
-        $idData = [];
-        foreach ($materials as $material) {
-            $idData[] = $material['id'];
-        }
-
-        $authors = Author::getDataForMaterials($idData);
-        $categories = Category::getDataForMaterials($idData);
-        $tags = Tag::getDataForMaterials($idData);
-
-        $materials = AbstractController::addDataForMaterials($materials, $authors, 'author');
-        $materials = AbstractController::addDataForMaterials($materials, $categories, 'category');
-        return AbstractController::addDataForMaterials($materials, $tags, 'tag');
+        $this->id = $id;
     }
 
-    public static function findSeveralMaterials($arrayWithId): ?array
+    /**
+     * @param string $title
+     */
+    public function setTitle(string $title): void
     {
-        $materials = [];
-        foreach ($arrayWithId as $id) {
-            $materials[] = Material::findById($id)[0];
+        $this->title = $title;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType(string $type): void
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @param array $authors
+     */
+    public function setAuthors(array $authors): void
+    {
+        $this->authors = $authors;
+    }
+
+    /**
+     * @param string $category
+     */
+    public function setCategory(string $category): void
+    {
+        $this->category = $category;
+    }
+
+    /**
+     * @param array $tags
+     */
+    public function setTags(array $tags): void
+    {
+        $this->tags = $tags;
+    }
+
+    /**
+     * @param string|null $description
+     */
+    public function setDescription(?string $description): void
+    {
+        $this->description = $description;
+    }
+
+    /*
+     * Получение объектов нескольких материалов
+     */
+    public static function findMaterials($arrayWithId = []): array
+    {
+        //Получение данных для списка материалов из таблицы material
+        if (empty($arrayWithId)) {
+            $materials = Material::findAll();
+            foreach ($materials as $item) {
+                $arrayWithId[] = $item->getId();
+            }
+        } else {
+            $materials = [];
+            foreach ($arrayWithId as $id) {
+                $materials[] = Material::findById($id);
+            }
         }
 
         if (empty($materials)) {
-            return null;
+            return $materials;
         }
 
-        $idData = [];
-        foreach ($materials as $material) {
-            $idData[] = $material['id'];
+        //Получение данных об авторах и категориях для списка материалов
+        $authorsForMaterials = Author::getDataForMaterials($arrayWithId);
+        $categoryForMaterials = Category::getDataForMaterials($arrayWithId, 'simple');
+
+        //Создание объектов материалов со всеми данными
+        $materialsWithAllData = [];
+        foreach ($materials as $keyMaterial => $material) {
+            if ($material === null) {
+                continue;
+            }
+            $materialWithAllData = new MaterialWithAllData();
+            $materialWithAllData->setId($material->getId());
+            $materialWithAllData->setTitle($material->getTitle());
+            $materialWithAllData->setType($material->getType());
+            $materialWithAllData->setDescription($material->getDescription());
+            $materialWithAllData->setAuthors($authorsForMaterials[$keyMaterial]);
+            $materialWithAllData->setCategory($categoryForMaterials[$keyMaterial]->getTitle());
+            $materialsWithAllData[] = $materialWithAllData;
         }
 
-        $authors = Author::getDataForMaterials($idData);
-        $categories = Category::getDataForMaterials($idData);
-        $tags = Tag::getDataForMaterials($idData);
-
-        $materials = AbstractController::addDataForMaterials($materials, $authors, 'author');
-        $materials = AbstractController::addDataForMaterials($materials, $categories, 'category');
-        return AbstractController::addDataForMaterials($materials, $tags, 'tag');
+        return $materialsWithAllData;
     }
 
-    public static function findOneMaterial($id): ?array
+    /*
+     * Получение объекта одного материала
+     */
+    public static function findOneMaterial($id): ?self
     {
+        //Получение данных для материала из таблицы material
         $material = Material::findById($id);
 
-        if (empty($material)) {
+        //Если материал не найден возвращает null
+        if ($material === null) {
             return null;
         }
 
-        $authors = Author::getDataForMaterials([$id]);
-        $categories = Category::getDataForMaterials([$id]);
-        $tags = Tag::getDataForMaterials([$id]);
+        //Получение данных об авторах, категориях, тегах для материала
+        $authors = Author::getDataForMaterials([$id])[0];
+        $category = Category::getDataForMaterials([$id], 'simple')[0];
+        $tags = Tag::getDataForMaterials([$id])[0];
 
-        $material = AbstractController::addDataForMaterials($material, $authors, 'author');
-        $material = AbstractController::addDataForMaterials($material, $categories, 'category');
-        return AbstractController::addDataForMaterials($material, $tags, 'tag');
+        //Создание объекта материала со всеми данными
+        $materialWithAllData = new MaterialWithAllData();
+        $materialWithAllData->setId($material->getId());
+        $materialWithAllData->setTitle($material->getTitle());
+        $materialWithAllData->setType($material->getType());
+        $materialWithAllData->setDescription($material->getDescription());
+        $materialWithAllData->setAuthors($authors);
+        $materialWithAllData->setCategory($category->getTitle());
+        $materialWithAllData->setTags($tags);
+
+        return $materialWithAllData;
     }
 
     /*
@@ -160,98 +200,60 @@ class MaterialWithAllData extends AbstractModel
         /*
          * Валидация полученных данных
          */
-        $exceptions = new InvalidArgumentException();
-
-        if (($data['type'] === 'Выберите тип') ||
-            !in_array(
-                    $data['type'],
-                    ['Книга', 'Статья', 'Видео', 'Сайт/Блог', 'Подборка', 'Ключевые идеи книги']
-            )
-        ) {
-            $exceptions->setException('type');
-        }
-
-        $allCategories = Category::getDataColumn('title');
-        if (($data['category'] === 'Выберите категорию') ||
-            !in_array(
-                $data['category'],
-                $allCategories
-            )
-        ) {
-            $exceptions->setException('category');
-        }
-
-        if (empty($data['title'])) {
-            $exceptions->setException('title');
-        }
-
-        if (!empty($data['authors'])) {
-            $AuthorsWithOneSeparator = preg_replace(
-                '~\s*[\.,\,,\:,\;,\/,\|,\\\]\s*~',
-                '|', $data['authors']);
-            $arrayAuthors = explode('|', $AuthorsWithOneSeparator);
-            $arrayObjectAuthors = [];
-            foreach ($arrayAuthors as $keyAuthor => $author) {
-                if (preg_match('~^[A-я,\s]+$~', $author)) {
-                    $arrayObjectAuthors[$keyAuthor] = new Author();
-                    $arrayObjectAuthors[$keyAuthor]->setName($author);
-                } else {
-                    $exceptions->setException('authors', "Недопустимые символы в имени $author");
-                }
-            }
-        }
-
-        if (!empty($exceptions->getAllException())) {
-            throw $exceptions;
-        }
+        $authors = Validation::validationDataMaterial($data);
 
         /*
-         * Если валидация пройдена создаем объект материал с данными для записи
+         * Если валидация пройдена создаем объект материала с данными для записи
          * в таблицу material и сохраняем данные в таблицу
          */
-        $material = new Material();
-        $material->setTitle(htmlentities($data['title']));
-        $material->setType($data['type']);
-        if ($data['description'] !== null) {
-            $material->setDescription(nl2br(htmlentities($data['description'])));
-        } else {
-            $material->setDescription(null);
-        }
-        $material->save();
+        $material = Material::createMaterial($data);
 
         /*
          * Если были переданы данные об авторах проверяем их наличие в таблице author
          * и добавляем связь с создаваемым материалом.
          * Если автора в БД нет - он заносится в БД
          */
-        if (!empty($arrayObjectAuthors)) {
-            $AllAuthors = Author::getDataColumn('title');
-
-            foreach ($arrayObjectAuthors as $simpleObjectAuthor) {
-                if (in_array($simpleObjectAuthor->getName(), $AllAuthors)) {
-                    $author = Author::findByColumnStrict('title', $simpleObjectAuthor->getName());
-                    Author::addPropertyToMaterial($author[0]->getId(), $material->getId());
-                } else {
-                    $author = new Author();
-                    $author->setName($simpleObjectAuthor->getName());
-                    $author->save();
-                    Author::addPropertyToMaterial($author->getId(), $material->getId());
-                }
-            }
+        if (!empty($authors)) {
+            Author::existAuthor($authors, $material->getId());
         }
 
         //Получение id категории создаваемого материала и добавление связи
-        $category = Category::findByColumnStrict('title', $data['category']);
-        $idCategory = $category[0]->getId();
-        Category::addPropertyToMaterial($idCategory, $material->getId());
+
+        $category = Category::findByColumn('title', $data['category']);
+        Category::addPropertyToMaterial($category->getId(), $material->getId());
 
         //Возвращение id создаваемого материала
         return $material->getId();
     }
 
-    public static function editMaterial($data)
+    /*
+     * Изменение существующего материала
+     */
+    public function updateMaterial($data)
     {
-        //--------------
+        /*
+        * Валидация полученных данных
+        */
+        $authors = Validation::validationDataMaterial($data);
+
+        /*
+         * Если валидация пройдена создаем объект материала с данными для записи
+         * в таблицу material и сохраняем данные в таблицу
+         */
+        $material = Material::createMaterial($data, $this->getId());
+
+        /*
+         * Если были переданы данные об авторах проверяем их наличие в таблице author
+         * и добавляем связь с создаваемым материалом.
+         * Если какого-либо из указанных автора в БД нет - он заносится в БД
+         */
+        if (!empty($authors)) {
+            Author::existAuthor($authors, $material->getId());
+        }
+
+        //Получение id категории создаваемого материала и добавление связи
+        $category = Category::findByColumn('title', $data['category']);
+        Category::addPropertyToMaterial($category->getId(), $material->getId());
     }
 
     //Удаление материала

@@ -14,7 +14,7 @@ class TagController extends AbstractController
      */
     public function show()
     {
-        $allTags = Tag::findAllInObject();
+        $allTags = Tag::findAll();
 
         $this->view->renderHtml(
             'list-tag.php',
@@ -67,17 +67,18 @@ class TagController extends AbstractController
     /*
      * Поиск и отображение списка материалов по тегу
      */
-    public function findByTag($tag)
+    public function findByTag($tagId)
     {
-        $currentTag = Tag::findByColumnStrict('title', $tag);
-        if ($currentTag === null) {
+        $tag = Tag::findById($tagId);
+        if ($tag === null) {
             $this->view->renderHtml(
                 'errors/error.php',
                 ['error' => 'Такого тега нет!'],
                 404);
             exit();
         }
-        $idMaterialsWithCurrentTag = Tag::getMaterialsByTag($currentTag[0]->getId());
+
+        $idMaterialsWithCurrentTag = Tag::getMaterialsByTag($tag->getId());
         if ($idMaterialsWithCurrentTag === null) {
             $this->view->renderHtml(
                 'errors/error.php',
@@ -85,12 +86,20 @@ class TagController extends AbstractController
                 404);
             exit();
         }
-        $materials = MaterialWithAllData::findSeveralMaterials($idMaterialsWithCurrentTag);
-        $arrayObject = self::returnResultsFind($materials);
+
+        $materials = MaterialWithAllData::findMaterials($idMaterialsWithCurrentTag);
+
+        if (empty($materials)) {
+            $this->view->renderHtml(
+                'errors/error.php',
+                ['error' => 'По данному тегу ничего не найдено'],
+                404);
+            exit();
+        }
 
         $this->view->renderHtml(
             'list-materials.php',
-            ['title' => 'Материалы', 'data' => $arrayObject]
+            ['title' => 'Материалы', 'data' => $materials]
         );
     }
 
@@ -126,7 +135,7 @@ class TagController extends AbstractController
      */
     public function edit($idTag)
     {
-        $tag = Tag::findByIdInObject($idTag);
+        $tag = Tag::findById($idTag);
 
         if ($tag === null) {
             $this->view->renderHtml(
@@ -167,7 +176,7 @@ class TagController extends AbstractController
      */
     public function delete($idTag)
     {
-        $tag = Tag::findByIdInObject($idTag);
+        $tag = Tag::findById($idTag);
         $tag->deleteRelations();
         $tag->delete();
         header('Location: /tags/show');
@@ -176,10 +185,26 @@ class TagController extends AbstractController
     /*
      * Удаление тега из материала
      */
-    public function deleteFromMaterial($tagName, $materialId)
+    public function deleteFromMaterial($tagId, $materialId)
     {
-        $tag = Tag::findByColumnStrict('title', $tagName)[0];
-        $tag->deleteTagFromMaterial($materialId);
+        $tag = Tag::findById($tagId);
+        $material = Material::findById($materialId);
+
+        if ($material === null) {
+            $this->view->renderHtml(
+                'errors/error.php',
+                [
+                    'error' => 'Данная статья не существует!',
+                    'description' => 'Вы ввели неправильный номер статьи.'
+                ],
+                404);
+            exit();
+        }
+
+        if ($tag !== null) {
+            $tag->deleteTagFromMaterial($materialId);
+        }
+
         header('Location: /material/show/' . $materialId);
     }
 }

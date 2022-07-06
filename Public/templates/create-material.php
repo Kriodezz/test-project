@@ -16,7 +16,11 @@
                 <div class="form-floating mb-3">
                     <select class="form-select" name="type" id="floatingSelectType">
                         <option selected>
-                            <?php echo $_POST['type'] ?? 'Выберите тип'; ?>
+                            <?php if ($act === 'Добавить') {
+                                echo $_POST['type'] ?? 'Выберите тип';
+                            } else {
+                                echo $_POST['type'] ?? $material->getType();
+                            } ?>
                         </option>
                         <option value="Книга">Книга</option>
                         <option value="Статья">Статья</option>
@@ -36,9 +40,13 @@
                 <div class="form-floating mb-3">
                     <select class="form-select" name="category" id="floatingSelectCategory">
                         <option selected>
-                            <?php echo $_POST['category'] ?? 'Выберите категорию'; ?>
+                        <?php if ($act === 'Добавить') {
+                            echo $_POST['category'] ?? 'Выберите категорию';
+                        } else {
+                            echo $_POST['category'] ?? $material->getCategory();
+                        } ?>
                         </option>
-                        <?php foreach ($categories as $category): ?>
+                        <?php foreach ($AllCategories as $category): ?>
                             <option value="<?php echo $category->getTitle(); ?>">
                                 <?php echo $category->getTitle(); ?>
                             </option>
@@ -56,7 +64,12 @@
                     <input type="text"
                            class="form-control"
                            name="title"
-                           value="<?php echo $_POST['title'] ?? ''; ?>"
+                           value="<?php
+                           if ($act === 'Добавить') {
+                               echo $_POST['title'] ?? '';
+                           } else {
+                               echo $_POST['title'] ?? $material->getTitle();
+                           } ?>"
                            placeholder="Напишите название"
                            id="floatingName">
                     <label for="floatingName">Название</label>
@@ -71,7 +84,25 @@
                     <input type="text"
                            class="form-control"
                            name="authors"
-                           value="<?php echo $_POST['authors'] ?? ''; ?>"
+                           value="<?php
+                           if ($act === 'Добавить') {
+                               echo $_POST['authors'] ?? '';
+                           } else {
+                               if (!empty($_POST['authors'])) {
+                                   echo $_POST['authors'];
+                               } else {
+                                   if (!empty($material->getAuthors())) {
+                                       foreach ($material->getAuthors() as $keyAuthor => $author) {
+                                           echo $author->getName();
+                                           if ($keyAuthor < (count($material->getAuthors()) - 1)) {
+                                               echo ' / ';
+                                           }
+                                       }
+                                   } else {
+                                       echo 'Автор отсутствует';
+                                   }
+                               }
+                           } ?>"
                            placeholder="Напишите авторов"
                            id="floatingAuthor">
                     <label for="floatingAuthor">Авторы</label>

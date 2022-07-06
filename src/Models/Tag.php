@@ -37,6 +37,9 @@ class Tag extends AbstractModel
         );
     }
 
+    /*
+     * Получение id материалов имеющих определенный тег
+     */
     public static function getMaterialsByTag($idTag): ?array
     {
         $db = Db::getInstance();

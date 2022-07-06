@@ -9,7 +9,7 @@ class CategoryController extends AbstractController
 {
     public function show()
     {
-        $allCategory = Category::findAllInObject();
+        $allCategory = Category::findAll();
 
         $this->view->renderHtml(
             'list-category.php',
@@ -42,7 +42,7 @@ class CategoryController extends AbstractController
 
     public function edit($idCategory)
     {
-        $category = Category::findByIdInObject($idCategory);
+        $category = Category::findById($idCategory);
 var_dump($category); var_dump($_POST);
         if ($category === null) {
             $this->view->renderHtml(
@@ -80,7 +80,7 @@ var_dump($category); var_dump($_POST);
 
     public function delete($idCategory)
     {
-        $category = Category::findByIdInObject($idCategory);
+        $category = Category::findById($idCategory);
         $category->deleteRelations();
         $category->delete();
         header('Location: /categories/show');

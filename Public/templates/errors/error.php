@@ -6,9 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="/Public/css/bootstrap.min.css">
-  <link rel="stylesheet" href="/Public/css/bootstrap-utilities.css">
-  <link rel="stylesheet" href="/Public/css/style.css">
+  <link rel="stylesheet" href="/../css/bootstrap.min.css">
+  <link rel="stylesheet" href="/../css/bootstrap-utilities.css">
+  <link rel="stylesheet" href="/../css/style.css">
   <title>Ошибочка</title>
 </head>
 <body>

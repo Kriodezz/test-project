@@ -6,14 +6,12 @@ use Tara\TestProject\Models\MaterialWithAllData;
 
 class IndexController extends AbstractController
 {
-    public function index($arrayData = [])
+    public function index()
     {
-        $arrayData = MaterialWithAllData::findAllMaterial();
-
-        $arrayObject = self::returnResultsFind($arrayData);
+        $allMaterials = MaterialWithAllData::findMaterials();
 
         $this->view->renderHtml(
-            'list-materials.php', ['title' => 'Материалы', 'data' => $arrayObject]
+            'list-materials.php', ['title' => 'Материалы', 'data' => $allMaterials]
         );
     }
 }

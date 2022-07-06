@@ -57,4 +57,32 @@ class Material extends AbstractModel
     {
         $this->description = $description;
     }
+
+    /**
+     * @param int|null $id
+     */
+    public function setId(?int $id)
+    {
+        $this->id = $id;
+    }
+
+    /*
+     * Создание объекта материала и заполнение свойств полученными от
+     * пользователя данными, при создании и редактировании материала
+     */
+    public static function createMaterial($data, $id = null): self
+    {
+        $material = new Material();
+        $material->setId($id);
+        $material->setTitle(htmlentities($data['title']));
+        $material->setType($data['type']);
+        if ($data['description'] !== null) {
+            $material->setDescription(nl2br(htmlentities($data['description'])));
+        } else {
+            $material->setDescription(null);
+        }
+        $material->save();
+
+        return $material;
+    }
 }

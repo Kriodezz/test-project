@@ -4,6 +4,7 @@ namespace Tara\TestProject\Controllers;
 
 use Tara\TestProject\Exception\InvalidArgumentException;
 use Tara\TestProject\Models\Category;
+use Tara\TestProject\Models\Material;
 use Tara\TestProject\Models\MaterialWithAllData;
 use Tara\TestProject\Models\Tag;
 
@@ -32,10 +33,10 @@ class MaterialController extends AbstractController
     public function show($idMaterial)
     {
         //Получение массива со всеми данными для материала по id материала
-        $dataMaterial = MaterialWithAllData::findOneMaterial($idMaterial);
+        $material = MaterialWithAllData::findOneMaterial($idMaterial);
 
         //Если данный материал не найден в базе, выводится страница с ошибкой
-        if ($dataMaterial === null) {
+        if ($material === null) {
             $this->view->renderHtml(
                 'errors/error.php',
                 [
@@ -46,19 +47,8 @@ class MaterialController extends AbstractController
             exit();
         }
 
-        //Создание объекта материала
-        $material = new MaterialWithAllData(
-            (int) $dataMaterial[0]['id'],
-            $dataMaterial[0]['title'],
-            $dataMaterial[0]['type'],
-            $dataMaterial[0]['author'],
-            $dataMaterial[0]['category'],
-            $dataMaterial[0]['tag'],
-            $dataMaterial[0]['description']
-        );
-
         //Получение всех тегов
-        $tags = Tag::findAllInObject();
+        $tags = Tag::findAll();
 
         $this->view->renderHtml(
             'view-material.php',
@@ -74,11 +64,11 @@ class MaterialController extends AbstractController
         if (!empty($_POST)) {
             try {
                 //Создаем записи в БД, получаем id созданного материала
-               $materialId = MaterialWithAllData::createNewMaterial($_POST);
+                $materialId = MaterialWithAllData::createNewMaterial($_POST);
 
-               //Редирект на страницу просмотра с новым материалом
-               header('Location: /material/show/' . $materialId);
-               exit();
+                //Редирект на страницу просмотра с новым материалом
+                header('Location: /material/show/' . $materialId);
+                exit();
 
             /*
              * При неуспешной валидации сведения об ошибках записываются
@@ -90,14 +80,14 @@ class MaterialController extends AbstractController
         }
 
         //Получение всех категорий для отображения в шаблоне
-        $allCategory = Category::findAllInObject();
+        $allCategory = Category::findAll();
 
         //Отображение шаблона создания и редактирования материала
         $this->view->renderHtml(
             'create-material.php',
             [
                 'title' => 'Материалы',
-                'categories' => $allCategory,
+                'AllCategories' => $allCategory,
                 'action' => '/material/create',
                 'act' => 'Добавить',
                 'button' => 'Добавить',
@@ -128,9 +118,8 @@ class MaterialController extends AbstractController
 
         if (!empty($_POST)) {
             try {
-                MaterialWithAllData::editMaterial($_POST);
-                $tag->updateTag($_POST);
-                header('Location: /tags/show');
+                $dataMaterial->updateMaterial($_POST);
+                header('Location: /');
                 exit();
             } catch (InvalidArgumentException $exception) {
                 $dataExceptions = $exception->getAllException();
@@ -138,7 +127,7 @@ class MaterialController extends AbstractController
         }
 
         //Получение всех категорий для отображения в шаблоне
-        $allCategory = Category::findAllInObject();
+        $allCategories = Category::findAll();
 
         //Отображение шаблона создания и редактирования материала
         $this->view->renderHtml(
@@ -146,8 +135,8 @@ class MaterialController extends AbstractController
             [
                 'title' => 'Материалы',
                 'material' => $dataMaterial,
-                'categories' => $allCategory,
-                'action' => '/material/create' . $idMaterial,
+                'AllCategories' => $allCategories,
+                'action' => '/material/edit/' . $idMaterial,
                 'act' => 'Редактировать',
                 'button' => 'Изменить',
                 'exceptions' => $dataExceptions ?? null

@@ -24,4 +24,20 @@ class Author extends AbstractModel
     {
         $this->title = $name;
     }
+
+    public static function existAuthor($authors, $materialId): void
+    {
+        $allAuthors = Author::getDataColumn('title');
+
+        foreach ($authors as $nameAuthor) {
+            if (in_array($nameAuthor, $allAuthors)) {
+                $author = Author::findByColumn('title', $nameAuthor);
+            } else {
+                $author = new Author();
+                $author->setName($nameAuthor);
+                $author->save();
+            }
+            Author::addPropertyToMaterial($author->getId(), $materialId);
+        }
+    }
 }

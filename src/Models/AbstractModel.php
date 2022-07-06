@@ -19,7 +19,7 @@ abstract class AbstractModel
     /*
      * Поиск в поле таблицы по регулярному выражению
      */
-    public static function findByColumn(string $columnName, $value): ?array
+    public static function findSomeByColumn(string $columnName, $value): ?array
     {
         $value = "%$value%";
         $db = Db::getInstance();
@@ -35,40 +35,35 @@ abstract class AbstractModel
     /*
      * Поиск в поле таблицы по значению
      */
-    public static function findByColumnStrict(string $columnName, $value): ?array
+    public static function findByColumn(string $columnName, $value): ?static
     {
         $db = Db::getInstance();
-        $result = $db->query(
+        $data = $db->query(
             'SELECT * FROM ' . static::TABLE_NAME .
             ' WHERE ' . $columnName . ' = :value',
             [':value' => $value],
             static::class
         );
-        return $result ?: null;
+        return $data ? $data[0] : null;
     }
 
+    /*
+     * Получение всех данных в таблице
+     */
     public static function findAll(): array
     {
         $db = Db::getInstance();
-        return $db->queryArray('SELECT * FROM ' . static::TABLE_NAME);
-    }
-
-    public static function findAllInObject(): array
-    {
-        $db = Db::getInstance();
-        return $db->query('SELECT * FROM ' . static::TABLE_NAME, [], static::class);
-    }
-
-    public static function findById($id): ?array
-    {
-        $db = Db::getInstance();
-        return$db->queryArray(
-            'SELECT * FROM ' . static::TABLE_NAME . ' WHERE id = :id',
-            [':id' => $id]
+        return $db->query(
+            'SELECT * FROM ' . static::TABLE_NAME,
+            [],
+            static::class
         );
     }
 
-    public static function findByIdInObject($id): ?static
+    /*
+     * Получение одной записи в таблице по id
+     */
+    public static function findById($id): ?static
     {
         $db = Db::getInstance();
         $data = $db->query(
@@ -93,28 +88,46 @@ abstract class AbstractModel
         return $array;
     }
 
-    public static function getDataForMaterials(array $idData): array
+    /*
+     * Получение данных об авторах, категории и тегах для материалов
+     * параметром $count указывается, сколько значений может иметь объект материала:
+     * одно или несколько
+     * (Например: Материал может иметь несколько авторов, а категорию - одну)
+     */
+    public static function getDataForMaterials(array $idData, $count = 'multiple'): array|static
     {
         $db = Db::getInstance();
 
         $data = [];
         foreach ($idData as $id) {
-            $sql = 'SELECT ' . static::TABLE_NAME . '.title AS ' . static::TABLE_NAME .
-                   ' FROM ' . static::TABLE_NAME .
-                   ' INNER JOIN material_' . static::TABLE_NAME .
-                   ' ON material_' . static::TABLE_NAME . '.' . static::TABLE_NAME .
-                   '_id = ' . static::TABLE_NAME . '.id
+            $sql = 'SELECT ' . static::TABLE_NAME . '.* 
+                   FROM ' . static::TABLE_NAME .
+                ' INNER JOIN material_' . static::TABLE_NAME .
+                ' ON material_' . static::TABLE_NAME . '.' . static::TABLE_NAME .
+                '_id = ' . static::TABLE_NAME . '.id
                     INNER JOIN material
                     ON material_' . static::TABLE_NAME . '.material_id = material.id
                     WHERE material.id = :id';
-            $data[] = $db->queryArray(
+            $result = $db->query(
                 $sql,
-                [':id' => $id]
+                [':id' => $id],
+                static::class
             );
+
+            if ($count === 'multiple') {
+                $data[] = $result;
+            } elseif ($count === 'simple') {
+                $data[] = $result[0];
+            }
         }
         return $data;
     }
 
+    /*
+     * Сохранение в БД
+     * При редактировании имеющегося материала объект содержит id,
+     * при создании нового - нет.
+     */
     public function save(): void
     {
         $property = $this->getProperty();
@@ -126,6 +139,9 @@ abstract class AbstractModel
         }
     }
 
+    /*
+     * Добавление нового материала
+     */
     public function insert($data): void
     {
         $dataWithoutNull = array_filter($data);
@@ -140,7 +156,7 @@ abstract class AbstractModel
         }
 
         $sql = 'INSERT INTO ' . static::TABLE_NAME .
-               '(' . implode(', ', $columns) . ') 
+            '(' . implode(', ', $columns) . ') 
                VALUES (' . implode(', ', $params) . ')';
         $db = Db::getInstance();
         $db->execute($sql, $paramsToValues);
@@ -149,6 +165,9 @@ abstract class AbstractModel
         $this->refresh();
     }
 
+    /*
+     * Обновление существующего материала
+     */
     public function update($data): void
     {
         $columnsToParams = [];
@@ -164,12 +183,15 @@ abstract class AbstractModel
             $index++;
         }
         $sql = 'UPDATE ' . static::TABLE_NAME .
-               ' SET ' . implode(', ', $columnsToParams) .
-               ' WHERE id = ' . $this->id;
+            ' SET ' . implode(', ', $columnsToParams) .
+            ' WHERE id = ' . $this->id;
         $db = Db::getInstance();
         $db->execute($sql, $paramsToValues);
     }
 
+    /*
+     * Удаление материала
+     */
     public function delete(): void
     {
         $db = Db::getInstance();
@@ -180,11 +202,15 @@ abstract class AbstractModel
         $this->id = null;
     }
 
+    /*
+     * Удаление связей
+     */
     public function deleteRelations(): void
     {
         $db = Db::getInstance();
         $db->execute(
-            'DELETE FROM material_' . static::TABLE_NAME . ' WHERE ' . static::TABLE_NAME . '_id = :id',
+            'DELETE FROM material_' . static::TABLE_NAME .
+            ' WHERE ' . static::TABLE_NAME . '_id = :id',
             [':id' => $this->id]
         );
     }
@@ -201,6 +227,9 @@ abstract class AbstractModel
         $db->execute($sql, [':idMaterial' => $idMaterial, ':idProperty' => $idProperty]);
     }
 
+    /*
+     * Получение свойств объекта
+     */
     protected function getProperty(): array
     {
         $propertiesOfObject = [];
@@ -215,7 +244,7 @@ abstract class AbstractModel
 
     protected function refresh(): void
     {
-        $objFromDb = static::findByIdInObject($this->id);
+        $objFromDb = static::findById($this->id);
 
         foreach ($objFromDb as $key => $value) {
             $this->$key = $value;
