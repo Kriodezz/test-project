@@ -28,7 +28,9 @@
                             </a>
 
                             <!-- Удаление тега -->
-                            <a href="/tag/delete/<?php echo $tag->getId(); ?>" class="text-decoration-none">
+                            <a href="#deleteTag<?php echo $tag->getId(); ?>"
+                               class="text-decoration-none"
+                               data-bs-toggle="modal">
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                      width="16"
                                      height="16"
@@ -42,6 +44,41 @@
                             </a>
                         </span>
                     </li>
+                    <div class="modal fade"
+                         id="deleteTag<?php echo $tag->getId(); ?>"
+                         aria-hidden="true"
+                         aria-labelledby="deleteTag"
+                         tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="deleteTagLabel">
+                                        Удалить тег
+                                    </h5>
+                                    <button type="button"
+                                            class="btn-close"
+                                            data-bs-dismiss="modal"
+                                            aria-label="Close">
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>
+                                        Вы действительно хотите удалить тег <b><?php echo $tag->getTitle(); ?></b>
+                                    </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="/tag/delete/<?php echo $tag->getId(); ?>">
+                                        <button type="submit" class="btn btn-primary">
+                                            Удалить
+                                        </button>
+                                    </a>
+                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                        Отмена
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 <?php endforeach; ?>
             </ul>
         </div>
