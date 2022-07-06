@@ -3,6 +3,7 @@
 namespace Tara\TestProject\Models;
 
 use Tara\TestProject\Exception\InvalidArgumentException;
+use Tara\TestProject\Services\Db;
 
 class Category extends AbstractModel
 {

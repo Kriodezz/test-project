@@ -243,15 +243,21 @@ class MaterialWithAllData extends AbstractModel
         $material = Material::createMaterial($data, $this->getId());
 
         /*
+         * Удаляем авторов материала. В случае передачи пользователем пустой строки
+         * материал становится без авторов.
          * Если были переданы данные об авторах проверяем их наличие в таблице author
          * и добавляем связь с создаваемым материалом.
          * Если какого-либо из указанных автора в БД нет - он заносится в БД
          */
+        Author::deleteFromMaterial($material->getId());
         if (!empty($authors)) {
             Author::existAuthor($authors, $material->getId());
         }
 
-        //Получение id категории создаваемого материала и добавление связи
+        /*  Удаление старой категории из материала.
+         * Получение id новой категории создаваемого материала и добавление связи
+         */
+        Category::deleteFromMaterial($material->getId());
         $category = Category::findByColumn('title', $data['category']);
         Category::addPropertyToMaterial($category->getId(), $material->getId());
     }
@@ -269,17 +275,8 @@ class MaterialWithAllData extends AbstractModel
         );
 
         //Удаление связей
-        $db->execute(
-            'DELETE FROM material_author WHERE material_id = :id',
-            [':id' => $idMaterial]
-        );
-        $db->execute(
-            'DELETE FROM material_category WHERE material_id = :id',
-            [':id' => $idMaterial]
-        );
-        $db->execute(
-            'DELETE FROM material_tag WHERE material_id = :id',
-            [':id' => $idMaterial]
-        );
+        Author::deleteFromMaterial($idMaterial);
+        Category::deleteFromMaterial($idMaterial);
+        Tag::deleteFromMaterial($idMaterial);
     }
 }

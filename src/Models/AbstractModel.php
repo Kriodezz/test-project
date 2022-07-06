@@ -203,7 +203,7 @@ abstract class AbstractModel
     }
 
     /*
-     * Удаление связей
+     * Удаление одной связи из материала
      */
     public function deleteRelations(): void
     {
@@ -212,6 +212,18 @@ abstract class AbstractModel
             'DELETE FROM material_' . static::TABLE_NAME .
             ' WHERE ' . static::TABLE_NAME . '_id = :id',
             [':id' => $this->id]
+        );
+    }
+
+    /*
+     * Удаление всех связей из материала
+     */
+    public static function deleteFromMaterial($idMaterial)
+    {
+        $db = Db::getInstance();
+        $db->execute(
+            'DELETE FROM material_' . static::TABLE_NAME . ' WHERE material_id = :id',
+            [':id' => $idMaterial]
         );
     }
 

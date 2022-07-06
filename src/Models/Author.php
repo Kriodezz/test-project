@@ -2,6 +2,8 @@
 
 namespace Tara\TestProject\Models;
 
+use Tara\TestProject\Services\Db;
+
 class Author extends AbstractModel
 {
     const TABLE_NAME = 'author';
@@ -28,7 +30,6 @@ class Author extends AbstractModel
     public static function existAuthor($authors, $materialId): void
     {
         $allAuthors = Author::getDataColumn('title');
-
         foreach ($authors as $nameAuthor) {
             if (in_array($nameAuthor, $allAuthors)) {
                 $author = Author::findByColumn('title', $nameAuthor);

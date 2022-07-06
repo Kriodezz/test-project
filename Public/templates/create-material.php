@@ -31,7 +31,7 @@
                     </select>
                     <label for="floatingSelectType">Тип</label>
                     <?php if (isset($exceptions['type'])) { ?>
-                        <p class="text-danger">Пожалуйста, выберите тип</p>
+                        <p class="text-danger">Пожалуйста, выберите тип из списка</p>
                     <?php } ?>
                     <div class="invalid-feedback">
                         Пожалуйста, выберите значение
@@ -54,7 +54,7 @@
                     </select>
                     <label for="floatingSelectCategory">Категория</label>
                     <?php if (isset($exceptions['category'])) { ?>
-                        <p class="text-danger">Пожалуйста, выберите категорию</p>
+                        <p class="text-danger">Пожалуйста, выберите категорию из списка</p>
                     <?php } ?>
                     <div class="invalid-feedback">
                         Пожалуйста, выберите значение
